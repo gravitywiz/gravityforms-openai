@@ -3,7 +3,7 @@
  * Plugin Name: Gravity Forms OpenAI
  * Description: Pair the magic of OpenAI's robust models with Gravity Forms' flexibility.
  * Plugin URI: https://gravitywiz.com/gravity-forms-openai/
- * Version: 1.0-alpha-1
+ * Version: 1.0-alpha-1.1
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  * License: GPL2
@@ -18,7 +18,7 @@
  * @link https://github.com/gravitywiz/gravityforms-openai
  */
 
-define( 'GWIZ_GF_OPENAI_VERSION', '1.0-alpha-1' );
+define( 'GWIZ_GF_OPENAI_VERSION', '1.0-alpha-1.1' );
 
 defined( 'ABSPATH' ) || die();
 
