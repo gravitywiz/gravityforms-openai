@@ -56,8 +56,12 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	protected $_title       = 'Gravity Forms OpenAI';
 	protected $_short_title = 'OpenAI';
 
-	// Use async feed processing to speed up form submission. Moderations endpoint isn't handled via process_feed().
-	protected $_async_feed_processing = true;
+	/**
+	 * Disable async feed processing for now as it can prevent results mapped to fields from working in notifications.
+	 *
+	 * @var bool
+	 */
+	protected $_async_feed_processing = false;
 
 	public static function get_instance() {
 		if ( self::$instance === null ) {
@@ -790,11 +794,11 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		switch ( $endpoint ) {
 			case 'completions':
-				$this->process_endpoint_completions( $feed, $entry, $form );
+				$entry = $this->process_endpoint_completions( $feed, $entry, $form );
 				break;
 
 			case 'edits':
-				$this->process_endpoint_edits( $feed, $entry, $form );
+				$entry = $this->process_endpoint_edits( $feed, $entry, $form );
 				break;
 
 			case 'images/generations':
@@ -810,6 +814,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$this->add_feed_error( sprintf( __( 'Unknown endpoint: %s' ), $endpoint ), $feed, $entry, $form );
 				break;
 		}
+
+		return $entry;
 	}
 
 	/**
@@ -818,6 +824,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @param $feed array The current feed being processed.
 	 * @param $entry array The current entry being processed.
 	 * @param $form array The current form being processed.
+	 *
+	 * @return array Modified entry.
 	 */
 	public function process_endpoint_completions( $feed, $entry, $form ) {
 		$model  = $feed['meta']['completions_model'];
@@ -839,7 +847,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		if ( is_wp_error( $response ) ) {
 			// If there was an error, log it and return.
 			$this->add_feed_error( $response->get_error_message(), $feed, $entry, $form );
-			return;
+			return $entry;
 		}
 
 		// Parse the response and add it as an entry note.
@@ -847,19 +855,21 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		if ( rgar( $response_data, 'error' ) ) {
 			$this->add_feed_error( $response_data['error']['message'], $feed, $entry, $form );
-			return;
+			return $entry;
 		}
 
 		$text = $this->get_text_from_response( $response_data );
 
 		if ( ! is_wp_error( $text ) ) {
 			GFAPI::add_note( $entry['id'], 0, 'OpenAI Response (' . $feed['meta']['feed_name'] . ')', $text );
-			$this->maybe_save_result_to_field( $feed, $entry, $form, $text );
+			$entry = $this->maybe_save_result_to_field( $feed, $entry, $form, $text );
 		} else {
 			$this->add_feed_error( $text->get_error_message(), $feed, $entry, $form );
 		}
 
 		gform_add_meta( $entry['id'], 'openai_response_' . $feed['id'], $response['body'] );
+
+		return $entry;
 	}
 
 	/**
@@ -868,6 +878,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @param $feed array The current feed being processed.
 	 * @param $entry array The current entry being processed.
 	 * @param $form array The current form being processed.
+	 *
+	 * @return array Modified entry.
 	 */
 	public function process_endpoint_edits( $feed, $entry, $form ) {
 		$model       = $feed['meta']['edits_model'];
@@ -892,7 +904,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		if ( is_wp_error( $response ) ) {
 			// If there was an error, log it and return.
 			$this->add_feed_error( $response->get_error_message(), $feed, $entry, $form );
-			return;
+			return $entry;
 		}
 
 		// Parse the response and add it as an entry note.
@@ -900,34 +912,40 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		if ( rgar( $response_data, 'error' ) ) {
 			$this->add_feed_error( $response_data['error']['message'], $feed, $entry, $form );
-			return;
+			return $entry;
 		}
 
 		$text = $this->get_text_from_response( $response_data );
 
 		if ( ! is_wp_error( $text ) ) {
 			GFAPI::add_note( $entry['id'], 0, 'OpenAI Response (' . $feed['meta']['feed_name'] . ')', $text );
-			$this->maybe_save_result_to_field( $feed, $entry, $form, $text );
+			$entry = $this->maybe_save_result_to_field( $feed, $entry, $form, $text );
 		} else {
 			$this->add_feed_error( $text->get_error_message(), $feed, $entry, $form );
 		}
 
 		gform_add_meta( $entry['id'], 'openai_response_' . $feed['id'], $response['body'] );
+
+		return $entry;
 	}
 
 
 	/**
 	 * Saves the result to the selected field if configured.
+	 *
+	 * @return array Modified entry.
 	 */
 	public function maybe_save_result_to_field( $feed, $entry, $form, $text ) {
 		$endpoint            = rgars( $feed, 'meta/endpoint' );
 		$map_result_to_field = rgars( $feed, 'meta/' . $endpoint . '_map_result_to_field' );
 
 		if ( ! is_numeric( $map_result_to_field ) ) {
-			return;
+			return $entry;
 		}
 
-		GFAPI::update_entry_field( $entry['id'], $map_result_to_field, $text );
+		$entry[ $map_result_to_field ] = $text;
+
+		return $entry;
 	}
 
 	/**
