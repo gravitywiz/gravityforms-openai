@@ -1,11 +1,15 @@
 <?php
-
+/**
+ * @package gravityforms-openai
+ * @author Gravity Wiz <support@gravitywiz.com>
+ * @license GPLv2
+ * @link https://github.com/gravitywiz/gravityforms-openai
+ */
 defined( 'ABSPATH' ) || die();
 
 GFForms::include_feed_addon_framework();
 
 /*
- * @todo Mapping completions/edits to a field
  * @todo Make notes configurable
  * @todo Make saving to meta configurable
  *
