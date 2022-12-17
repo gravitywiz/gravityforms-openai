@@ -12,6 +12,7 @@
  * Domain Path: /languages
  *
  * @package gravityforms-openai
+ * @copyright Copyright (c) 2022, Gravity Wiz, LLC
  * @author Gravity Wiz <support@gravitywiz.com>
  * @license GPLv2
  * @link https://github.com/gravitywiz/gravityforms-openai
