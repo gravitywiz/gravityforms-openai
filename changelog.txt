@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-alpha-1.2
+
+	- Fixed issue where results in mapped fields would not show in notifications.
+
 ## 1.0-alpha-1.1
 
 	- Added README.md and copyright.
