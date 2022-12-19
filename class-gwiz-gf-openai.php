@@ -954,6 +954,16 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return $entry;
 		}
 
+		$field = GFAPI::get_field( $form, (int) $map_result_to_field );
+
+		if ( rgar( $field, 'useRichTextEditor' ) ) {
+			$text = wp_kses_post( $text );
+		} else {
+			// br2nl
+			$text = preg_replace( '/<br\s?\/?>/ius', "\n", str_replace( "\n", '', str_replace( "\r", '', htmlspecialchars_decode( $text ) ) ) );
+			$text = wp_strip_all_tags( $text );
+		}
+
 		$entry[ $map_result_to_field ] = $text;
 
 		GFAPI::update_entry_field( $entry['id'], $map_result_to_field, $text );
