@@ -956,6 +956,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		$entry[ $map_result_to_field ] = $text;
 
+		GFAPI::update_entry_field( $entry['id'], $map_result_to_field, $text );
+
 		return $entry;
 	}
 
