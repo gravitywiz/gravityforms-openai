@@ -490,6 +490,17 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					),
 				),
 			),
+			//Conditional Logic
+			array(
+				'title'  => esc_html__( 'Conditional Logic', 'gravityforms-openai' ),
+				'fields' => array(
+					array(
+						'label' => '',
+						'name'  => 'conditional_logic',
+						'type'  => 'feed_condition',
+					),
+				),
+			),
 			array(
 				'title'      => 'Advanced Settings: Completions',
 				'fields'     => array(
