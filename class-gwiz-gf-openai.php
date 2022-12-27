@@ -175,6 +175,53 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	}
 
 	/**
+	 * Gets models owned by the user or organization.
+	 */
+	public function get_user_models() {
+		$url = 'https://api.openai.com/v1/models';
+
+		$cache_key = sha1( $url );
+		$transient = 'gform_openai_cache_' . $cache_key;
+
+		if ( get_transient( $transient ) ) {
+			return get_transient( $transient );
+		}
+
+		$response = wp_remote_get( $url, array(
+			'headers' => $this->get_headers(),
+			'timeout' => 5,
+		) );
+
+		$models = array();
+
+		if ( ! is_wp_error( $response ) ) {
+			try {
+				$response = wp_remote_retrieve_body( $response );
+				$response = json_decode( $response, true );
+
+				// Filter results to only models owned by the user/org.
+				foreach ( $response['data'] as $model ) {
+					if ( strpos( $model['owned_by'], 'user-' ) === 0 || strpos( $model['owned_by'], 'org-' ) === 0 ) {
+						$models[ $model['id'] ] = array_merge(
+							$model,
+							array(
+								'user_model' => true,
+							)
+						);
+					}
+				}
+			} catch ( Exception $e ) {
+				// Do nothing, $models is already an empty array.
+			}
+		}
+
+		// Cache for 5 minutes.
+		set_transient( $transient, $models, 5 * MINUTE_IN_SECONDS );
+
+		return $models;
+	}
+
+	/**
 	 * Defines the settings for the plugin's global settings such as API key. Accessible via Forms » Settings
 	 *
 	 * @return array[]
@@ -266,6 +313,11 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$choices = array();
 		$models  = rgar( $this->get_openai_models(), $endpoint );
 
+		// Add user models to completions models.
+		if ( $endpoint === 'completions' ) {
+			$models = array_merge( $models, $this->get_user_models() );
+		}
+
 		if ( ! $models ) {
 			return array();
 		}
@@ -274,7 +326,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$choices[] = array(
 				'label'   => $model,
 				'value'   => $model,
-				'tooltip' => 'openai_model_' . $model,
+				'tooltip' => ! rgar( $model, 'user_model' ) ? 'openai_model_' . $model : null,
 			);
 		}
 
@@ -1431,8 +1483,20 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	public function get_request_params( $feed ) {
 		$endpoint        = rgars( $feed, 'meta/endpoint' );
 		$default_timeout = rgar( rgar( $this->default_settings, $endpoint ), 'timeout' );
+		$headers         = $this->get_headers();
 
-		// Get the OpenAI API tokens from the plugin settings.
+		return array(
+			'headers' => $headers,
+			'timeout' => rgar( $feed['meta'], $endpoint . '_' . 'timeout', $default_timeout ),
+		);
+	}
+
+	/**
+	 * Gets headers used for virtually every request.
+	 *
+	 * @return array
+	 */
+	public function get_headers() {
 		$settings     = $this->get_plugin_settings();
 		$secret_key   = $settings['secret_key'];
 		$organization = $settings['organization'];
@@ -1446,9 +1510,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$headers['OpenAI-Organization'] = $organization;
 		}
 
-		return array(
-			'headers' => $headers,
-			'timeout' => rgar( $feed['meta'], $endpoint . '_' . 'timeout', $default_timeout ),
-		);
+		return $headers;
 	}
 }
