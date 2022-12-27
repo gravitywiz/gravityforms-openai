@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-alpha-1.4
+
+	- Added new `gf_openai_request_body` PHP filter for customizing requests that go to OpenAI.
+	- Added support for using custom/fine-tuned models when using the Completions endpoint.
+
 ## 1.0-alpha-1.3
 
 	- Added kses/strip_all_tags (depending on if field is using rich text editor) to `maybe_save_result_to_field()`.
