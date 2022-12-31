@@ -243,6 +243,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 											),
 						'label'       => 'Secret Key',
 						'type'        => 'text',
+						'input_type'  => 'password',
 						'class'       => 'medium',
 						'required'    => true,
 					),
