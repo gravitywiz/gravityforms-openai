@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-alpha-1.5
+
+	- Updated feed merge tags to evaluate feed conditional logic (if configured) before returning a result. If the conditional logic does not evaluate as truthy, an empty string is returned.
+	- Updated secret key setting to be a masked input.
+
 ## 1.0-alpha-1.4
 
 	- Added new `gf_openai_request_body` PHP filter for customizing requests that go to OpenAI.
