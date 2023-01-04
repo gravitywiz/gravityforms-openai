@@ -1338,6 +1338,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return '';
 		}
 
+		if ( ! $this->is_feed_condition_met( $feed, $form, $entry ) ) {
+			return '';
+		}
+
 		switch ( $endpoint ) {
 			case 'completions':
 				$model  = $feed['meta']['completions_model'];
