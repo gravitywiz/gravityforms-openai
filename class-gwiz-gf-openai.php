@@ -1306,7 +1306,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				continue;
 			}
 
-			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format );
+			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers );
 			$text        = str_replace( $match[0], $replacement, $text );
 		}
 
@@ -1319,14 +1319,14 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				continue;
 			}
 
-			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format );
+			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers );
 			$text        = str_replace( $match[0], $replacement, $text );
 		}
 
 		return $text;
 	}
 
-	public function get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format ) {
+	public function get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers ) {
 		$feed     = $this->get_feed( $feed_id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
@@ -1342,6 +1342,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return '';
 		}
 
+		$response_data = array();
+
 		switch ( $endpoint ) {
 			case 'completions':
 				$model  = $feed['meta']['completions_model'];
@@ -1354,7 +1356,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					'prompt' => $prompt,
 				), $feed );
 
-				$response_data = json_decode( $response['body'], true );
+				if ( ! is_wp_error( $response ) ) {
+					$response_data = json_decode( $response['body'], true );
+				}
 				break;
 
 			case 'edits':
@@ -1371,14 +1375,20 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					'instruction' => $instruction,
 				), $feed );
 
-				$response_data = json_decode( $response['body'], true );
+				if ( ! is_wp_error( $response ) ) {
+					$response_data = json_decode( $response['body'], true );
+				}
 				break;
 
 			default:
 				return '';
 		}
 
-		$text = $this->get_text_from_response( $response_data );
+		if ( ! rgar( $modifiers, 'raw' ) ) {
+			$text = $this->get_text_from_response( $response_data );
+		} else {
+			$text = rgars( $response_data, rgar( $modifiers, 'raw' ) );
+		}
 
 		$text = $url_encode ? urlencode( $text ) : $text;
 		$text = $format === 'html' ? wp_kses_post( $text ) : wp_strip_all_tags( $text );
