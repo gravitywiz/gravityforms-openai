@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-alpha-1.6
+
+	- Added new `raw` modifier that can be used in the feed merge tags. This allows for fetching specific properties from the OpenAI response. Example usage: `{:1:openai_feed_2,raw[usage/total_tokens]}`
+
 ## 1.0-alpha-1.5
 
 	- Updated feed merge tags to evaluate feed conditional logic (if configured) before returning a result. If the conditional logic does not evaluate as truthy, an empty string is returned.
