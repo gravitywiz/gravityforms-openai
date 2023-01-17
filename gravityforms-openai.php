@@ -7,7 +7,6 @@
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com/
  * License: GPL2
- * Perk: True
  * Text Domain: gravityforms-openai
  * Domain Path: /languages
  *
