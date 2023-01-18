@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-alpha-1.7
+
+	- Removed `Perk: True` from the plugin header to address potential PHP errors.
+
 ## 1.0-alpha-1.6
 
 	- Added new `raw` modifier that can be used in the feed merge tags. This allows for fetching specific properties from the OpenAI response. Example usage: `{:1:openai_feed_2,raw[usage/total_tokens]}`
