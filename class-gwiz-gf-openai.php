@@ -1352,7 +1352,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$prompt = GFCommon::replace_variables( $prompt, $form, $entry, false, false, false, 'text' );
 
 				// If prompt is empty, do not generate any completion response, skip with blank.
-				if( empty( $prompt ) ) {
+				if ( empty( $prompt ) ) {
 					$response = '';
 					break;
 				}
@@ -1376,7 +1376,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$instruction = GFCommon::replace_variables( $instruction, $form, $entry, false, false, false, 'text' );
 
 				// If input or instruction is empty, do not generate any edit response, skip with blank.
-				if( empty( $input ) || empty( $instruction ) ) {
+				if ( empty( $input ) || empty( $instruction ) ) {
 					$response = '';
 					break;
 				}
