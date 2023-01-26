@@ -1353,8 +1353,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 				// If prompt is empty, do not generate any completion response, skip with blank.
 				if ( empty( $prompt ) ) {
-					$response = '';
-					break;
+					return '';
 				}
 
 				$response = $this->make_request( 'completions', array(
@@ -1377,8 +1376,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 				// If input or instruction is empty, do not generate any edit response, skip with blank.
 				if ( empty( $input ) || empty( $instruction ) ) {
-					$response = '';
-					break;
+					return '';
 				}
 
 				$response = $this->make_request( 'edits', array(
