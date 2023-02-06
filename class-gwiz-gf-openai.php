@@ -1279,6 +1279,11 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @return string The text with merge tags processed.
 	 */
 	public function replace_merge_tags( $text, $form, $entry, $url_encode, $esc_html, $nl2br, $format ) {
+		// Process merge tags only if they are an openai feed.
+		if ( ! strpos( $text, 'openai_feed' ) ) {
+			return $text;
+		}
+
 		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $field_variable_matches, PREG_SET_ORDER );
 
 		foreach ( $field_variable_matches as $match ) {
