@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-alpha-1.8
+
+	- Fixed an issue where GP Populate Anything values would not get populated when Gravity Forms OpenAI was enabled.
+	- Fixed an issue where OpenAI responses could be displayed in the Form Editor.
+
 ## 1.0-alpha-1.7
 
 	- Removed `Perk: True` from the plugin header to address potential PHP errors.
