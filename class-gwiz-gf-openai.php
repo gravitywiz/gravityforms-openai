@@ -57,8 +57,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	protected $_short_title = 'OpenAI';
 
 	/**
-	 * Defines the capabilities needed for the Add-On. Ensures compatibility
-	 * with Members plugin.
+	 * Defines the capabilities needed for the Add-On.
 	 *
 	 * @var array $_capabilities The capabilities needed for the Add-On
 	 */
