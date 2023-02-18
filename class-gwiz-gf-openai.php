@@ -57,6 +57,40 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	protected $_short_title = 'OpenAI';
 
 	/**
+	 * Defines the capabilities needed for the Add-On.
+	 *
+	 * @var array $_capabilities The capabilities needed for the Add-On
+	 */
+	protected $_capabilities = array(
+		'gravityforms-openai',
+		'gravityforms-openai_uninstall',
+		'gravityforms-openai_results',
+		'gravityforms-openai_settings',
+		'gravityforms-openai_form_settings',
+	);
+
+	/**
+	 * Defines the capability needed to access the Add-On settings page.
+	 *
+	 * @var string $_capabilities_settings_page The capability needed to access the Add-On settings page.
+	 */
+	protected $_capabilities_settings_page = 'gravityforms-openai_settings';
+
+	/**
+	 * Defines the capability needed to access the Add-On form settings page.
+	 *
+	 * @var string $_capabilities_form_settings The capability needed to access the Add-On form settings page.
+	 */
+	protected $_capabilities_form_settings = 'gravityforms-openai_form_settings';
+
+	/**
+	 * Defines the capability needed to uninstall the Add-On.
+	 *
+	 * @var string $_capabilities_uninstall The capability needed to uninstall the Add-On.
+	 */
+	protected $_capabilities_uninstall = 'gravityforms-openai_uninstall';
+
+	/**
 	 * Disable async feed processing for now as it can prevent results mapped to fields from working in notifications.
 	 *
 	 * @var bool
