@@ -4,8 +4,37 @@
 		"wp-coding-standards/wpcs": "^2.3",
 		"phpcompatibility/php-compatibility": "*"
 	},
+	"require": {
+		"inc2734/wp-github-plugin-updater": "^3.1"
+	},
 	"scripts": {
 		"lint": "phpcs",
-		"lint:fix": "phpcbf"
+		"lint:fix": "phpcbf",
+		"post-install-cmd": [
+			"@prefix-dependencies",
+			"@remove-vendor"
+		],
+		"post-update-cmd": [
+			"@prefix-dependencies",
+			"@remove-vendor"
+		],
+		"credit-for-these-php-scoper-scripts": "https://github.com/google/site-kit-wp",
+		"prefix-dependencies": [
+			"@composer --working-dir=php-scoper install",
+			"rm -rf third-party",
+			"./php-scoper/vendor/bin/php-scoper add --output-dir=./third-party --force --quiet",
+			"@autoload-third-party",
+			"@composer dump-autoload"
+		],
+		"autoload-third-party": [
+			"echo '{ \"autoload\": { \"classmap\": [\"\"] } }' > third-party/composer.json",
+			"@composer --working-dir=third-party dump-autoload --classmap-authoritative --no-interaction || true",
+			"cp third-party/vendor/composer/autoload_classmap.php third-party/",
+			"rm -rf third-party/vendor && rm third-party/composer.json",
+			"mkdir -p third-party/vendor/composer && mv third-party/autoload_classmap.php third-party/vendor/composer/"
+		],
+		"remove-vendor": [
+			"rm -rf vendor"
+		]
 	}
 }

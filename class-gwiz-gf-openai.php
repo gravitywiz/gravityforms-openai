@@ -45,6 +45,11 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	);
 
 	/**
+	 * @var GWiz_GF_OpenAI\Dependencies\Inc2734\WP_GitHub_Plugin_Updater\Bootstrap The updater instance.
+	 */
+	public $updater;
+
+	/**
 	 * @var null|GWiz_GF_OpenAI
 	 */
 	private static $instance = null;
@@ -126,6 +131,110 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				'version' => '4.8',
 			),
 		);
+	}
+
+	/**
+	 * Load dependencies and initialize auto-updater
+	 */
+	public function pre_init() {
+		parent::pre_init();
+
+		$this->setup_autoload();
+		$this->init_auto_updater();
+	}
+
+	/**
+	 * @credit https://github.com/google/site-kit-wp
+	 */
+	public function setup_autoload() {
+		$class_map = array_merge(
+			include plugin_dir_path( __FILE__ ) . 'third-party/vendor/composer/autoload_classmap.php'
+		);
+
+		spl_autoload_register(
+			function ( $class ) use ( $class_map ) {
+				if ( isset( $class_map[ $class ] ) && 'GWiz_GF_OpenAI\\Dependencies' === substr( $class, 0, 27 ) ) {
+					require_once $class_map[ $class ];
+				}
+			},
+			true,
+			true
+		);
+	}
+
+	/**
+	 * Initialize the auto-updater.
+	 */
+	public function init_auto_updater() {
+		// Initialize GitHub auto-updater
+		add_filter(
+			'inc2734_github_plugin_updater_plugins_api_gravitywiz/gravityforms-openai',
+			array( $this, 'filter_auto_updater_response' ), 10, 2
+		);
+
+		$this->updater = new GWiz_GF_OpenAI\Dependencies\Inc2734\WP_GitHub_Plugin_Updater\Bootstrap(
+			plugin_basename( plugin_dir_path( __FILE__ ) . 'gravityforms-openai.php' ),
+			'gravitywiz',
+			'gravityforms-openai',
+			array(
+				'description_url' => 'https://raw.githubusercontent.com/gravitywiz/gravityforms-openai/master/readme.md',
+				'changelog_url'   => 'https://raw.githubusercontent.com/gravitywiz/gravityforms-openai/master/changelog.txt',
+				'icons'           => array(
+					'svg' => 'https://raw.githubusercontent.com/gravitywiz/gravityforms-openai/master/icon.svg',
+				),
+				'banners'         => array(
+					'low' => 'https://gravitywiz.com/wp-content/uploads/2022/12/gfoai-by-dalle-1.png',
+				),
+				'requires_php'    => '5.6.0',
+			)
+		);
+	}
+
+	/**
+	 * Filter the GitHub auto-updater response to remove sections we don't need and update various fields.
+	 *
+	 * @param stdClass $obj
+	 * @param stdClass $response
+	 *
+	 * @return stdClass
+	 */
+	public function filter_auto_updater_response( $obj, $response ) {
+		$remove_sections = array(
+			'installation',
+			'faq',
+			'screenshots',
+			'reviews',
+			'other_notes',
+		);
+
+		foreach ( $remove_sections as $section ) {
+			if ( isset( $obj->sections[ $section ] ) ) {
+				unset( $obj->sections[ $section ] );
+			}
+		}
+
+		if ( isset( $obj->active_installs ) ) {
+			unset( $obj->active_installs );
+		}
+
+		$obj->homepage = 'https://gravitywiz.com/gravity-forms-openai/';
+		$obj->author   = '<a href="https://gravitywiz.com/" target="_blank">Gravity Wiz</a>';
+
+		$parsedown = new GWiz_GF_OpenAI\Dependencies\Parsedown();
+		$changelog = trim( $obj->sections['changelog'] );
+
+		// Remove the "Changelog" h1.
+		$changelog = preg_replace( '/^# Changelog/m', '', $changelog );
+
+		// Remove the tab before the list item so it's not treated as code.
+		$changelog = preg_replace( '/^\t- /m', '- ', $changelog );
+
+		// Convert h2 to h4 to avoid weird styles that add a lot of whitespace.
+		$changelog = preg_replace( '/^## /m', '#### ', $changelog );
+
+		$obj->sections['changelog'] = $parsedown->text( $changelog );
+
+		return $obj;
 	}
 
 	/**
