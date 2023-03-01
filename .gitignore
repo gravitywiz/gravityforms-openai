@@ -2,7 +2,8 @@
 .DS_Store
 
 # Composer
-/vendor
+vendor
+third-party
 
 # Cypress
 cypress/screenshots
