@@ -12,20 +12,20 @@ return array(
 	'finders'                    => array(
 		// General dependencies, except Google API services.
 		Finder::create()
-		      ->files()
-		      ->ignoreVCS( true )
-		      ->notName( '/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.(json|lock)/' )
-		      ->exclude(
-			      array(
-				      'doc',
-				      'test',
-				      'test_old',
-				      'tests',
-				      'Tests',
-				      'vendor-bin',
-			      )
-		      )
-		      ->in( 'vendor' ),
+			->files()
+			->ignoreVCS( true )
+			->notName( '/LICENSE|.*\\.md|.*\\.dist|Makefile|composer\\.(json|lock)/' )
+			->exclude(
+				array(
+					'doc',
+					'test',
+					'test_old',
+					'tests',
+					'Tests',
+					'vendor-bin',
+				)
+			)
+			->in( 'vendor' ),
 	),
 	'files-whitelist'            => array(),
 	'whitelist'                  => array(),
