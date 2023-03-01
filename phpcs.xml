@@ -10,6 +10,7 @@
 
 	<!-- Exclude Composer vendor directory. -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/third-party/*</exclude-pattern>
 
 	<!-- Exclude NPM modules -->
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
