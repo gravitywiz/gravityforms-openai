@@ -13,9 +13,6 @@ GFForms::include_feed_addon_framework();
 /*
  * @todo Make notes configurable
  * @todo Make saving to meta configurable
- *
- * Future todos:
- *  * Image endpoint support, neat possibilities with GP Media Library, GP File Upload Pro, and more.
  */
 class GWiz_GF_OpenAI extends GFFeedAddOn {
 
@@ -38,9 +35,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		),
 		'moderations'        => array(
 			'timeout' => 5,
-		),
-		'images/generations' => array(
-			'timeout' => 15,
 		),
 	);
 
@@ -304,14 +298,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					'type' => 'Moderation',
 				),
 			),
-			'images/generations' => array(
-				array(
-					'image-generations-dall-e-1' => array(
-						'type' => 'Image Generation',
-					),
-				),
-			),
-
 		);
 
 		return apply_filters( 'gf_openai_models', $models );
@@ -441,7 +427,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$tooltips['openai_endpoint_completions']        = __( 'Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.', 'gravityforms-openai' );
 		$tooltips['openai_endpoint_edits']              = __( 'Given a prompt and an instruction, the model will return an edited version of the prompt.', 'gravityforms-openai' );
 		$tooltips['openai_endpoint_moderations']        = __( 'Given a input text, outputs if the model classifies it as violating OpenAI\'s content policy.', 'gravityforms-openai' );
-		$tooltips['openai_endpoint_images_generations'] = __( 'Creates an image given a prompt.', 'gravityforms-openai' );
 
 		return $tooltips;
 	}
@@ -512,11 +497,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 								'label'   => __( 'Moderations', 'gravityforms-openai' ),
 								'tooltip' => 'openai_endpoint_moderations',
 							),
-						//                          array(
-						//                              'value'   => 'images/generations',
-						//                              'label'   => __( 'Images Generations', 'gravityforms-openai' ),
-						//                              'tooltip' => 'openai_endpoint_images_generations',
-						//                          ),
 						),
 						'default_value' => 'completions',
 					),
@@ -664,28 +644,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					),
 				),
 			),
-			array(
-				'title'      => 'Images Generations',
-				'fields'     => array(
-					array(
-						'name'     => 'images_generations_prompt',
-						'tooltip'  => __( 'A text description of the desired image(s). The maximum length is 1000 characters.', 'gravityforms-openai' ),
-						'label'    => 'Prompt',
-						'type'     => 'textarea',
-						'class'    => 'medium merge-tag-support mt-position-right',
-						'required' => true,
-					),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'images/generations' ),
-						),
-					),
-				),
-			),
 			//Conditional Logic
 			array(
 				'title'  => esc_html__( 'Conditional Logic', 'gravityforms-openai' ),
@@ -745,21 +703,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 						array(
 							'field'  => 'endpoint',
 							'values' => array( 'moderations' ),
-						),
-					),
-				),
-			),
-			array(
-				'title'      => 'Advanced Settings: Image Generations',
-				'fields'     => array(
-					$this->feed_advanced_setting_timeout( 'images/generations' ),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'images/generations' ),
 						),
 					),
 				),
@@ -1008,10 +951,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$entry = $this->process_endpoint_edits( $feed, $entry, $form );
 				break;
 
-			case 'images/generations':
-				$this->process_endpoint_images_generations( $feed, $entry, $form );
-				break;
-
 			case 'moderations':
 				$this->process_endpoint_moderations( $feed, $entry, $form );
 				break;
@@ -1165,58 +1104,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		GFAPI::update_entry_field( $entry['id'], $map_result_to_field, $text );
 
 		return $entry;
-	}
-
-	/**
-	 * Process images/generations endpoint.
-	 *
-	 * @param $feed array The current feed being processed.
-	 * @param $entry array The current entry being processed.
-	 * @param $form array The current form being processed.
-	 */
-	public function process_endpoint_images_generations( $feed, $entry, $form ) {
-		$prompt = $feed['meta']['images_generations_prompt'];
-
-		// Parse the merge tags in the prompt
-		$prompt = GFCommon::replace_variables( $prompt, $form, $entry, false, false, false, 'text' );
-
-		GFAPI::add_note( $entry['id'], 0, 'OpenAI Request (' . $feed['meta']['feed_name'] . ')', sprintf( __( 'Sent request to OpenAI images/generations endpoint.', 'gravityforms-openai' ) ) );
-
-		// translators: placeholders are the feed name, model, prompt
-		$this->log_debug( __METHOD__ . '(): ' . sprintf( __( 'Sent request to OpenAI. Feed: %1$s, Endpoint: images/generations, Prompt: %2$s', 'gravityforms-openai' ), $feed['meta']['feed_name'], $prompt ) );
-
-		$response = $this->make_request( 'images/generations', array(
-			'prompt'          => $prompt,
-			'response_format' => 'b64_json',
-		), $feed );
-
-		if ( is_wp_error( $response ) ) {
-			// If there was an error, log it and return.
-			$this->add_feed_error( $response->get_error_message(), $feed, $entry, $form );
-			return;
-		}
-
-		// Parse the response and add it as an entry note.
-		$response_data = json_decode( $response['body'], true );
-
-		if ( rgar( $response_data, 'error' ) ) {
-			$this->add_feed_error( $response_data['error']['message'], $feed, $entry, $form );
-			return;
-		}
-
-		$text = $this->get_text_from_response( $response_data );
-
-		if ( ! is_wp_error( $text ) ) {
-			$html = '<img src="data:image/png;base64,' . $text . '" />';
-
-			// Use GFFormsModel::add_note instead of GFAPI::add_note to bypass kses.
-			// @todo it still gets kses'd, going to disable this endpoint for now and figure out a way to tie into GP Media Library.
-			GFFormsModel::add_note( intval( $entry['id'] ), 0, 'OpenAI Response (' . $feed['meta']['feed_name'] . ')', $html );
-		} else {
-			$this->add_feed_error( $text->get_error_message(), $feed, $entry, $form );
-		}
-
-		gform_add_meta( $entry['id'], 'openai_response_' . $feed['id'], $response['body'] );
 	}
 
 	/**
@@ -1393,16 +1280,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	public function get_text_from_response( $response ) {
 		if ( rgars( $response, 'choices/0/text' ) ) {
 			return trim( rgars( $response, 'choices/0/text' ) );
-		}
-
-		// Image as URL (expires in 1 hour)
-		if ( rgars( $response, 'data/0/url' ) ) {
-			return trim( rgars( $response, 'data/0/url' ) );
-		}
-
-		// Image as Base64
-		if ( rgars( $response, 'data/0/b64_json' ) ) {
-			return trim( rgars( $response, 'data/0/b64_json' ) );
 		}
 
 		return trim( rgar( $response, 'text' ) );
