@@ -11,7 +11,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --dev --prefer-dist --no-progress --no-suggest
-          composer require --dev staabm/annotate-pull-request-from-checkstyle
+          composer install --dev --prefer-dist --no-progress --no-suggest --no-scripts
+          composer require --dev staabm/annotate-pull-request-from-checkstyle --no-scripts
+
       - name: Run phpcs
         run: ./vendor/bin/phpcs -q --report=checkstyle | ./vendor/bin/cs2pr --graceful-warnings
