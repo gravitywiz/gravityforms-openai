@@ -36,5 +36,10 @@
 		"remove-vendor": [
 			"rm -rf vendor"
 		]
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }
