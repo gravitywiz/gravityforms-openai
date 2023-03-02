@@ -1503,7 +1503,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return '';
 		}
 
-		if ( ! $this->is_feed_condition_met( $feed, $form, $entry ) ) {
+		if ( ! rgar( $feed, 'is_active' ) || ! $this->is_feed_condition_met( $feed, $form, $entry ) ) {
 			return '';
 		}
 
