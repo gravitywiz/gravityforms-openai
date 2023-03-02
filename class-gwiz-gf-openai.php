@@ -1479,6 +1479,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				continue;
 			}
 
+			$nl2br = rgar( $modifiers, 'nl2br' ) ? true : $nl2br;
+
 			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers );
 			$text        = str_replace( $match[0], $replacement, $text );
 		}
