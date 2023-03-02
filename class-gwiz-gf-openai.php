@@ -1320,6 +1320,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			// Create dummy entry with what has been submitted
 			$entry = GFFormsModel::create_lead( $form );
 
+			if ( ! rgar( $feed, 'is_active' ) || ! $this->is_feed_condition_met( $feed, $form, $entry ) ) {
+				return $validation_result;
+			}
+
 			if ( $this->process_endpoint_moderations( $feed, $entry, $form ) ) {
 				$validation_result['is_valid'] = false;
 
@@ -1397,6 +1401,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 			if ( $feed['meta']['moderations_behavior'] !== 'spam' ) {
 				continue;
+			}
+
+			if ( ! rgar( $feed, 'is_active' ) || ! $this->is_feed_condition_met( $feed, $form, $entry ) ) {
+				return '';
 			}
 
 			if ( $this->process_endpoint_moderations( $feed, $entry, $form ) ) {
