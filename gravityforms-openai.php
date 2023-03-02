@@ -29,7 +29,16 @@ add_action( 'gform_loaded', function() {
 	require plugin_dir_path( __FILE__ ) . 'class-gwiz-gf-openai.php';
 
 	GFAddOn::register( 'GWiz_GF_OpenAI' );
-}, 5 );
+}, 0 ); // Load before Gravity Flow
+
+/*
+ * Gravity Flow compatibility.
+ */
+add_action( 'gravityflow_loaded', function() {
+	require_once( gwiz_gf_openai()->get_base_path() . '/includes/class-gravity-flow-step-feed-gwiz-gf-openai.php' );
+
+	Gravity_Flow_Steps::register( new Gravity_Flow_Step_Feed_GWiz_GF_OpenAI() );
+} );
 
 /**
  * Returns an instance of the GWiz_GF_OpenAI class
