@@ -155,7 +155,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		spl_autoload_register(
 			function ( $class ) use ( $class_map ) {
-				if ( isset( $class_map[ $class ] ) && 'GWiz_GF_OpenAI\\Dependencies' === substr( $class, 0, 27 ) ) {
+				if ( isset( $class_map[ $class ] ) && substr( $class, 0, 27 ) === 'GWiz_GF_OpenAI\\Dependencies' ) {
 					require_once $class_map[ $class ];
 				}
 			},
