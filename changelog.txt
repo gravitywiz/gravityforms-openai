@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0-beta-1
+
+	- Added a Gravity Flow Step Type for OpenAI. Credit: @Idealien
+	- Added new `nl2br` modifier that can be used on merge tags to convert newlines into `<br />`'s. This is useful when outputting plain-text responses into HTML using Live Merge Tags. Example: `@{:1:openai_feed_5,nl2br}`.
+	- Fixed issue where feed conditional logic and feed status (active/inactive) were not checked during validation for the Moderations endpoint.
+	- Fixed issue where feed status was not taken into account during merge tag replacement so inactive feeds would still have their merge tags replaced.
+	- Added new Chat Completions endpoint.
+	- Added auto-updater powered by GitHub Releases.
+	- Added new capabilities to grant/deny access to OpenAI settings and to uninstall it.
+
 ## 1.0-alpha-1.8
 
 	- Fixed an issue where GP Populate Anything values would not get populated when Gravity Forms OpenAI was enabled.
