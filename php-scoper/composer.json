@@ -1,5 +1,6 @@
 {
 	"require-dev": {
-		"humbug/php-scoper": "^0.15.0"
+		"humbug/php-scoper": "^0.18.2",
+		"sniccowp/php-scoper-wordpress-excludes": "^6.1"
 	}
 }
