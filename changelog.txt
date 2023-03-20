@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.1
+
+	- Fixed potential PHP warnings/errors caused by `php-scoper`.
+
 ## 1.0-beta-1
 
 	- Added a Gravity Flow Step Type for OpenAI. Credit: @Idealien
