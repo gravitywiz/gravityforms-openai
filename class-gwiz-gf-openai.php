@@ -1656,14 +1656,15 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			'request_params' => $this->get_request_params( $feed ),
 		) ) );
 
-		// Check runtime cache first and then transient
+		// Check runtime cache first and then transient (if enabled)
 		if ( isset( $request_cache[ $cache_key ] ) ) {
 			return $request_cache[ $cache_key ];
 		}
 
 		$transient = 'gform_openai_cache_' . $cache_key;
+		$use_cache = gf_apply_filters( array( 'gf_openai_cache_responses', $feed['form_id'], $feed['id'] ), true, $feed['form_id'], $feed, $endpoint, $body );
 
-		if ( get_transient( $transient ) ) {
+		if ( $use_cache && get_transient( $transient ) ) {
 			return get_transient( $transient );
 		}
 
@@ -1703,8 +1704,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		$request_cache[ $cache_key ] = $response;
 
-		// Save as a transient for 5 minutes.
-		set_transient( $transient, $request_cache[ $cache_key ], 5 * MINUTE_IN_SECONDS );
+		if ( $use_cache ) {
+			// Save as a transient for 5 minutes.
+			set_transient( $transient, $request_cache[ $cache_key ], 5 * MINUTE_IN_SECONDS );
+		}
 
 		return $request_cache[ $cache_key ];
 	}
