@@ -1238,6 +1238,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		GFAPI::update_entry_field( $entry['id'], $map_result_to_field, $text );
 
+		gf_do_action( array( 'gf_openai_post_save_result_to_field', $form['id'] ), $text );
+
 		return $entry;
 	}
 
