@@ -477,6 +477,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		return $choices;
 	}
 
+	public function can_duplicate_feed( $feed_id ) {
+		return true;
+	}
+
 	public function feed_settings_fields() {
 		return array(
 			array(
@@ -1456,6 +1460,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $field_variable_matches, PREG_SET_ORDER );
 
+		$modifiers = array();
 		foreach ( $field_variable_matches as $match ) {
 			$input_id      = $match[1];
 			$i             = $match[0][0] === '{' ? 4 : 5;
@@ -1507,7 +1512,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$feed     = $this->get_feed( $feed_id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
-		if ( ! $endpoint ) {
+		if ( ! $endpoint || rgar( $feed, 'form_id' ) !== rgar( $form, 'id' ) ) {
 			return '';
 		}
 
