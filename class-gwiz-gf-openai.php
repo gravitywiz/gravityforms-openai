@@ -1460,7 +1460,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		preg_match_all( '/{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/mi', $text, $field_variable_matches, PREG_SET_ORDER );
 
-		$modifiers = array();
 		foreach ( $field_variable_matches as $match ) {
 			$input_id      = $match[1];
 			$i             = $match[0][0] === '{' ? 4 : 5;
@@ -1501,7 +1500,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				continue;
 			}
 
-			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers );
+			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, array() );
 			$text        = str_replace( $match[0], $replacement, $text );
 		}
 
