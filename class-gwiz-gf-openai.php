@@ -477,6 +477,10 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		return $choices;
 	}
 
+	public function can_duplicate_feed( $feed_id ) {
+		return true;
+	}
+
 	public function feed_settings_fields() {
 		return array(
 			array(
@@ -1496,7 +1500,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				continue;
 			}
 
-			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, $modifiers );
+			$replacement = $this->get_merge_tag_replacement( $form, $entry, $feed_id, $url_encode, $esc_html, $nl2br, $format, array() );
 			$text        = str_replace( $match[0], $replacement, $text );
 		}
 
@@ -1507,7 +1511,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$feed     = $this->get_feed( $feed_id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
-		if ( ! $endpoint ) {
+		if ( ! $endpoint || rgar( $feed, 'form_id' ) !== rgar( $form, 'id' ) ) {
 			return '';
 		}
 
