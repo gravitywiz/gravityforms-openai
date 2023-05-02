@@ -141,27 +141,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	public function pre_init() {
 		parent::pre_init();
 
-		$this->setup_autoload();
+		require_once $this->get_base_path() . '/vendor/autoload.php';
+
 		$this->init_auto_updater();
-	}
-
-	/**
-	 * @credit https://github.com/google/site-kit-wp
-	 */
-	public function setup_autoload() {
-		$class_map = array_merge(
-			include plugin_dir_path( __FILE__ ) . 'third-party/vendor/composer/autoload_classmap.php'
-		);
-
-		spl_autoload_register(
-			function ( $class ) use ( $class_map ) {
-				if ( isset( $class_map[ $class ] ) && substr( $class, 0, 27 ) === 'GWiz_GF_OpenAI\\Dependencies' ) {
-					require_once $class_map[ $class ];
-				}
-			},
-			true,
-			true
-		);
 	}
 
 	/**
