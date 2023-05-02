@@ -1512,7 +1512,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$feed     = $this->get_feed( $feed_id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
-		if ( ! $endpoint || rgar( $feed, 'form_id' ) !== rgar( $form, 'id' ) ) {
+		if ( ! $endpoint || (int) rgar( $feed, 'form_id' ) !== (int) rgar( $form, 'id' ) ) {
 			return '';
 		}
 
