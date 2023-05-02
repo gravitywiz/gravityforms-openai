@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0-beta-1.2
+
+	- Fixed issue where merge tag completion values would sometimes be blank.
+	- Fixed issue where non-OpenAI merge tag output for multi-input field types such as checkboxes could get inadvertently cleared out.
+	- Fixed issues with Open AI feed not duplicating when form was duplicated.
+	- Added hook `gf_openai_post_save_result_to_field` to trigger after OpenAI result is stored on an entry.
+	- Added new `gf_openai_cache_responses` filter hook that can be used to disable caching OpenAI responses.
+
 ## 1.0-beta-1.1
 
 	- Fixed potential PHP warnings/errors caused by `php-scoper`.
