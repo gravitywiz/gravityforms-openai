@@ -1466,12 +1466,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$modifiers_str = rgar( $match, $i );
 			$modifiers     = $this->parse_modifiers( $modifiers_str );
 
-			// Ensure our field is question has a value
-			if ( ! rgar( $entry, $input_id ) ) {
-				$text = str_replace( $match[0], '', $text );
-				continue;
-			}
-
 			$feed_id = null;
 
 			foreach ( $modifiers as $modifier ) {
@@ -1481,7 +1475,14 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				}
 			}
 
+			// Do not process if we don't have a match on openai_feed_ as a modifier as it could impact other merge tags.
 			if ( ! is_numeric( $feed_id ) ) {
+				continue;
+			}
+
+			// Ensure our field in question has a value
+			if ( ! rgar( $entry, $input_id ) ) {
+				$text = str_replace( $match[0], '', $text );
 				continue;
 			}
 
