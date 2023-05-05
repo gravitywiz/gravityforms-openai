@@ -290,8 +290,15 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			),
 			'chat/completions' => array(
 				'gpt-3.5-turbo' => array(
-					'type'        => 'GPT 3.5 Turbo',
 					'description' => __( 'The same model used by <a href="https://chat.openai.com" target="_blank">ChatGPT</a>.', 'gravityforms-openai' ),
+				),
+				'gpt-4'         => array(
+					'waitlist'    => 'https://openai.com/waitlist/gpt-4-api',
+					'description' => __( 'More capable than any GPT-3.5 model, able to do more complex tasks, and optimized for chat. Will be updated with the latest model iteration.<br /><br /><a target="_blank" href="https://openai.com/waitlist/gpt-4-api">Join Waitlist</a>', 'gravityforms-openai' ),
+				),
+				'gpt-4-32k'     => array(
+					'description' => __( 'Same capabilities as the base gpt-4 mode but with 4x the context length. Will be updated with the latest model iteration.<br /><br /><a target="_blank" href="https://openai.com/waitlist/gpt-4-api">Join Waitlist</a>', 'gravityforms-openai' ),
+					'waitlist'    => 'https://openai.com/waitlist/gpt-4-api',
 				),
 			),
 			'edits'            => array(
@@ -468,9 +475,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		foreach ( $models as $model => $model_info ) {
 			$choices[] = array(
-				'label'   => $model,
+				'label'   => $model . ( rgar( $model_info, 'waitlist' ) ? ' (' . __( 'Requires Waitlist', 'gravityforms-openai' ) . ')' : '' ),
 				'value'   => $model,
-				'tooltip' => ! rgar( $model, 'user_model' ) ? 'openai_model_' . $model : null,
+				'tooltip' => ! rgar( $model_info, 'user_model' ) ? 'openai_model_' . $model : null,
 			);
 		}
 
