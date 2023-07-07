@@ -1120,6 +1120,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		// Parse the merge tags in the message.
 		$message = GFCommon::replace_variables( $message, $form, $entry, false, false, false, 'text' );
+		$message = GFCommon::encode_shortcodes( $message );
 
 		GFAPI::add_note( $entry['id'], 0, 'OpenAI Request (' . $feed['meta']['feed_name'] . ')', sprintf( __( 'Sent request to OpenAI chat/completions endpoint.', 'gravityforms-openai' ) ) );
 
