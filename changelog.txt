@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.4
+
+	- Added gpt-3.5-turbo-16k as an available model for the Chat Completions endpoint.
+
 ## 1.0-beta-1.3
 
 	- Added `gpt-4` and `gpt-4-32k` as available models for the Chat Completions endpoint.
