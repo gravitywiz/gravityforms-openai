@@ -104,6 +104,13 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 */
 	protected $_async_feed_processing = false;
 
+	/**
+	 * Allow re-ordering of feeds.
+	 *
+	 * @var bool
+	 */
+	protected $_supports_feed_ordering = true;
+
 	public static function get_instance() {
 		if ( self::$instance === null ) {
 			self::$instance = new self;
@@ -289,16 +296,16 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 			),
 			'chat/completions' => array(
-				'gpt-3.5-turbo' => array(
+				'gpt-3.5-turbo'     => array(
 					'description' => __( 'The same model used by <a href="https://chat.openai.com" target="_blank">ChatGPT</a>.', 'gravityforms-openai' ),
 				),
 				'gpt-3.5-turbo-16k' => array(
 					'description' => __( 'Same capabilities as the standard gpt-3.5-turbo model but with 4x the context length.', 'gravityforms-openai' ),
 				),
-				'gpt-4'         => array(
+				'gpt-4'             => array(
 					'description' => __( 'More capable than any GPT-3.5 model, able to do more complex tasks, and optimized for chat. Will be updated with the latest model iteration.', 'gravityforms-openai' ),
 				),
-				'gpt-4-32k'     => array(
+				'gpt-4-32k'         => array(
 					'description' => __( 'Same capabilities as the base gpt-4 mode but with 4x the context length. Will be updated with the latest model iteration.', 'gravityforms-openai' ),
 				),
 			),
