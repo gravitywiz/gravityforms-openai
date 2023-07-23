@@ -150,6 +150,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		$this->setup_autoload();
 		$this->init_auto_updater();
+
+		add_filter( 'gform_export_form', array( $this, 'export_feeds_with_form' ) );
+		add_action( 'gform_forms_post_import', array( $this, 'import_feeds_with_form' ) );
 	}
 
 	/**
@@ -1772,5 +1775,53 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		}
 
 		return $headers;
+	}
+
+	/**
+	 * Export OpenAI Add-On feeds when exporting forms.
+	 *
+	 * @param array $form The current form being exported.
+	 *
+	 * @return array
+	 */
+	public function export_feeds_with_form( $form ) {
+		$feeds = $this->get_feeds( $form['id'] );
+
+		if ( ! isset( $form['feeds'] ) ) {
+			$form['feeds'] = array();
+		}
+
+		$form['feeds'][ $this->get_slug() ] = $feeds;
+
+		return $form;
+	}
+
+	/**
+	 * Import OpenAI Add-On feeds when importing forms.
+	 *
+	 * @param array $forms Imported forms.
+	 */
+	public function import_feeds_with_form( $forms ) {
+		foreach ( $forms as $import_form ) {
+			// Ensure the imported form is the latest.
+			$form = GFAPI::get_form( $import_form['id'] );
+
+			if ( ! rgars( $form, 'feeds/' . $this->get_slug() ) ) {
+				continue;
+			}
+
+			foreach ( rgars( $form, 'feeds/' . $this->get_slug() ) as $feed ) {
+				GFAPI::add_feed( $form['id'], $feed['meta'], $this->get_slug() );
+			}
+
+			// Remove feeds from the form array as it's no longer needed.
+			unset( $form['feeds'][ $this->get_slug() ] );
+
+			if ( empty( $form['feeds'] ) ) {
+				unset( $form['feeds'] );
+			}
+
+			GFAPI::update_form( $form );
+		}
 	}
 }
