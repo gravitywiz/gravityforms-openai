@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-beta-1.5
+
+	- Added OpenAI feeds to form export/import. (Closes #17)
+	- Added support for re-ordering feeds. (Closes #10)
+
 ## 1.0-beta-1.4
 
 	- Added gpt-3.5-turbo-16k as an available model for the Chat Completions endpoint.
