@@ -1727,6 +1727,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return $response;
 		}
 
+		$response = apply_filters( 'gf_openai_response', $response, $body, $endpoint, $feed );
+
 		$request_cache[ $cache_key ] = $response;
 
 		if ( $use_cache ) {
