@@ -360,6 +360,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$response = wp_remote_retrieve_body( $response );
 				$response = json_decode( $response, true );
 
+				if ( is_array( rgar( $response, 'data' ) ) ) {
 				// Filter results to only models owned by the user/org.
 				foreach ( $response['data'] as $model ) {
 					if ( strpos( $model['owned_by'], 'user-' ) === 0 || strpos( $model['owned_by'], 'org-' ) === 0 ) {
@@ -370,6 +371,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 							)
 						);
 					}
+				}
 				}
 			} catch ( Exception $e ) {
 				// Do nothing, $models is already an empty array.
@@ -1762,8 +1764,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 */
 	public function get_headers() {
 		$settings     = $this->get_plugin_settings();
-		$secret_key   = $settings['secret_key'];
-		$organization = $settings['organization'];
+		$secret_key   = rgar( $settings, 'secret_key' );
+		$organization = rgar( $settings, 'organization' );
 
 		$headers = array(
 			'Content-Type'  => 'application/json',
