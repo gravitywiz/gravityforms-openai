@@ -361,17 +361,17 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$response = json_decode( $response, true );
 
 				if ( is_array( rgar( $response, 'data' ) ) ) {
-				// Filter results to only models owned by the user/org.
-				foreach ( $response['data'] as $model ) {
-					if ( strpos( $model['owned_by'], 'user-' ) === 0 || strpos( $model['owned_by'], 'org-' ) === 0 ) {
-						$models[ $model['id'] ] = array_merge(
-							$model,
-							array(
-								'user_model' => true,
-							)
-						);
+					// Filter results to only models owned by the user/org.
+					foreach ( $response['data'] as $model ) {
+						if ( strpos( $model['owned_by'], 'user-' ) === 0 || strpos( $model['owned_by'], 'org-' ) === 0 ) {
+							$models[ $model['id'] ] = array_merge(
+								$model,
+								array(
+									'user_model' => true,
+								)
+							);
+						}
 					}
-				}
 				}
 			} catch ( Exception $e ) {
 				// Do nothing, $models is already an empty array.
@@ -1133,6 +1133,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		// Parse the merge tags in the message.
 		$message = GFCommon::replace_variables( $message, $form, $entry, false, false, false, 'text' );
+
+		// Allow filtering the message
+		$message = apply_filters( 'gf_openai_chat_completions_message', $message, $entry, $feed, $form );
 
 		GFAPI::add_note( $entry['id'], 0, 'OpenAI Request (' . $feed['meta']['feed_name'] . ')', sprintf( __( 'Sent request to OpenAI chat/completions endpoint.', 'gravityforms-openai' ) ) );
 
