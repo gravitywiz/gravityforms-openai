@@ -1535,6 +1535,12 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$feed     = $this->get_feed( $feed_id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
+		// If a response was already generated, retrieve it.
+		$response_data = json_decode( gform_get_meta( $entry['id'], 'openai_response_' . $feed['id'] ), true );
+		if ( ! rgar( $response_data, 'error' ) ) {
+			return $this->get_text_from_response( $response_data );
+		}
+
 		if ( ! $endpoint || (int) rgar( $feed, 'form_id' ) !== (int) rgar( $form, 'id' ) ) {
 			return '';
 		}
