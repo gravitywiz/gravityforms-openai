@@ -1577,6 +1577,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 				$message = GFCommon::replace_variables( $message, $form, $entry, false, false, false, 'text' );
 
+				// Allow filtering the message
+				$message = apply_filters( 'gf_openai_chat_completions_message', $message, $entry, $feed, $form );
+
 				// If message is empty, do not generate any chat response, skip with blank.
 				if ( empty( $message ) ) {
 					return '';
