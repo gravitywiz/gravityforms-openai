@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-beta-1.7
+
+	- Added a `log_debug()` call before any request.
+	- Fixed issue where the `gf_openai_chat_completions_message` filter hook would not run during merge tag replacement.
+
 ## 1.0-beta-1.6
 
 	- Added new `gf_openai_chat_completions_message` PHP filter hook.
