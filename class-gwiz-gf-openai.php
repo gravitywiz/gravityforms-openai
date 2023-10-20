@@ -1726,6 +1726,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		$body = apply_filters( 'gf_openai_request_body', $body, $endpoint, $feed );
 
+		$this->log_debug( __METHOD__ . '(): ' . sprintf( __( 'Making request to %s', 'gravityforms-openai' ), $url ) );
+
 		// Cache successful responses.
 		$response = wp_remote_post($url, array_merge( array(
 			'body' => json_encode( $body ),
