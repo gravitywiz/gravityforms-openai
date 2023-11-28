@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0-beta-1.8
+
+	- Added `gpt-4-1106-preview` as an available model for the Chat Completions endpoint.
+	- Added a filter to the OpenAI response.
+
 ## 1.0-beta-1.7
 
 	- Added a `log_debug()` call before any request.
