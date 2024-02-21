@@ -1443,10 +1443,15 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	}
 
 	public function get_feed( $id ) {
-		$feed = parent::get_feed( $id );
+		$feed     = parent::get_feed( $id );
+		$endpoint = rgars( $feed, 'meta/endpoint' );
+
+		if ( !in_array( $endpoint, array( 'completions', 'edits' ) ) ) {
+			return $feed;
+		}
 
 		if ( $this->is_feed_edit_page() ) {
-			$message = $this->get_transform_message( $feed );
+			$message = $this->get_transform_message( $endpoint );
 			GFCommon::add_dismissible_message( $message, $id . '_transform_feed_notice' );
 		}
 
@@ -1460,30 +1465,43 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 *
 	 * @return array
 	 */
-    public function transform_feed( $feed ) {
+	public function transform_feed( $feed ) {
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
 		if ( $endpoint === 'completions' ) {
 			$completion_message = rgars( $feed, 'meta/completions_prompt' );
-			$feed['meta'] = array_merge( $feed['meta'], array( 'endpoint' => 'chat/completions', 'chat_completions_model' => 'gpt-3.5-turbo', 'chat_completions_message' => $completion_message ) );
+			$feed['meta']       = array_merge(
+				$feed['meta'],
+				array(
+					'endpoint'                 => 'chat/completions',
+					'chat_completions_model'   => 'gpt-3.5-turbo',
+					'chat_completions_message' => $completion_message 
+				)
+			);
 		}
 
 		if ( $endpoint === 'edits' ) {
 			$completion_message = rgars( $feed, 'meta/edits_instruction' ) . "\r\n\r\n" . rgars( $feed, 'meta/edits_input' );
-			$feed['meta'] = array_merge( $feed['meta'], array( 'endpoint' => 'chat/completions', 'chat_completions_model' => 'gpt-3.5-turbo', 'chat_completions_message' => $completion_message ) );
+			$feed['meta']       = array_merge(
+				$feed['meta'],
+				array(
+					'endpoint'                 => 'chat/completions',
+					'chat_completions_model'   => 'gpt-3.5-turbo',
+					'chat_completions_message' => $completion_message
+				)
+			);
 		}
 
 		return $feed;
     }
 
 	/**
-	 * @param array $feed The feed being processed.
+	 * @param string $end feed endpoint.
 	 *
 	 * @return string
 	 */
-	public function get_transform_message( $feed ) {
-		$endpoint = rgars( $feed, 'meta/endpoint' );
-
+	public function get_transform_message( $endpoint ) {
+		// translators: placeholder is a string
 		return sprintf( __( 'This feed has been updated to use the "Chat Completions" endpoint, replacing the "%s" endpoint which has been deprecated by OpenAI.', 'gravityforms-openai' ), ucfirst( $endpoint ) );
 	}
 
