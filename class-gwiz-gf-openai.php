@@ -20,14 +20,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @var array The default settings to pass to OpenAI
 	 */
 	public $default_settings = array(
-		'completions'      => array(
-			'max_tokens'        => 500,
-			'temperature'       => 1,
-			'top_p'             => 1,
-			'frequency_penalty' => 0,
-			'presence_penalty'  => 0,
-			'timeout'           => 15,
-		),
 		'chat/completions' => array(
 			'max_tokens'        => 1000,
 			'temperature'       => 1,
@@ -35,11 +27,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			'frequency_penalty' => 0,
 			'presence_penalty'  => 0,
 			'timeout'           => 15,
-		),
-		'edits'            => array(
-			'temperature' => 1,
-			'top_p'       => 1,
-			'timeout'     => 15,
 		),
 		'moderations'      => array(
 			'timeout' => 5,
@@ -272,32 +259,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 */
 	public function get_openai_models() {
 		$models = array(
-			'completions'      => array(
-				'text-davinci-003' => array(
-					'type'        => 'GPT-3',
-					'description' => __( 'Most capable GPT-3 model. Can do any task the other models can do, often with higher quality, longer output and better instruction-following. Also supports <a href="https://beta.openai.com/docs/guides/completion/inserting-text" target="_blank">inserting</a> completions within text.', 'gravityforms-openai' ),
-				),
-				'text-curie-001'   => array(
-					'type'        => 'GPT-3',
-					'description' => __( 'Very capable, but faster and lower cost than Davinci.', 'gravityforms-openai' ),
-				),
-				'text-babbage-001' => array(
-					'type'        => 'GPT-3',
-					'description' => __( 'Capable of straightforward tasks, very fast, and lower cost.', 'gravityforms-openai' ),
-				),
-				'text-ada-001'     => array(
-					'type'        => 'GPT-3',
-					'description' => __( 'Capable of very simple tasks, usually the fastest model in the GPT-3 series, and lowest cost.', 'gravityforms-openai' ),
-				),
-				'code-davinci-002' => array(
-					'type'        => 'Codex',
-					'description' => __( 'Most capable Codex model. Particularly good at translating natural language to code. In addition to completing code, also supports <a href="https://beta.openai.com/docs/guides/code/inserting-code" target="_blank">inserting</a> completions within code.', 'gravityforms-openai' ),
-				),
-				'code-cushman-001' => array(
-					'type'        => 'Codex',
-					'description' => __( 'Almost as capable as Davinci Codex, but slightly faster. This speed advantage may make it preferable for real-time applications.', 'gravityforms-openai' ),
-				),
-			),
 			'chat/completions' => array(
 				'gpt-3.5-turbo'      => array(
 					'description' => __( 'The same model used by <a href="https://chat.openai.com" target="_blank">ChatGPT</a>.', 'gravityforms-openai' ),
@@ -313,16 +274,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 				'gpt-4-1106-preview' => array(
 					'description' => __( 'The latest GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Returns a maximum of 4,096 output tokens.', 'gravityforms-openai' ),
-				),
-			),
-			'edits'            => array(
-				'text-davinci-edit-001' => array(
-					'type'        => 'GPT-3',
-					'description' => __( 'Most capable GPT-3 model. Can do any task the other models can do, often with higher quality, longer output and better instruction-following. Also supports <a href="https://beta.openai.com/docs/guides/completion/inserting-text" target="_blank">inserting</a> completions within text.', 'gravityforms-openai' ),
-				),
-				'code-davinci-edit-001' => array(
-					'type'        => 'Codex',
-					'description' => __( 'Most capable Codex model. Particularly good at translating natural language to code. In addition to completing code, also supports <a href="https://beta.openai.com/docs/guides/code/inserting-code" target="_blank">inserting</a> completions within code.', 'gravityforms-openai' ),
 				),
 			),
 			'moderations'      => array(
@@ -461,9 +412,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			}
 		}
 
-		$tooltips['openai_endpoint_completions']      = __( 'Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position.', 'gravityforms-openai' );
 		$tooltips['openai_endpoint_chat_completions'] = __( 'Given a single message, the model will return a model-generated message as an output.', 'gravityforms-openai' );
-		$tooltips['openai_endpoint_edits']            = __( 'Given a prompt and an instruction, the model will return an edited version of the prompt.', 'gravityforms-openai' );
 		$tooltips['openai_endpoint_moderations']      = __( 'Given a input text, outputs if the model classifies it as violating OpenAI\'s content policy.', 'gravityforms-openai' );
 
 		return $tooltips;
@@ -525,19 +474,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 						'type'          => 'radio',
 						'choices'       => array(
 							array(
-								'value'   => 'completions',
-								'label'   => __( 'Completions', 'gravityforms-openai' ),
-								'tooltip' => 'openai_endpoint_completions',
-							),
-							array(
 								'value'   => 'chat/completions',
 								'label'   => __( 'Chat Completions', 'gravityforms-openai' ),
 								'tooltip' => 'openai_endpoint_chat_completions',
-							),
-							array(
-								'value'   => 'edits',
-								'label'   => __( 'Edits', 'gravityforms-openai' ),
-								'tooltip' => 'openai_endpoint_edits',
 							),
 							array(
 								'value'   => 'moderations',
@@ -546,38 +485,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 							),
 						),
 						'default_value' => 'completions',
-					),
-				),
-			),
-			array(
-				'title'      => 'Completions',
-				'fields'     => array(
-					array(
-						'name'     => 'completions_model',
-						'tooltip'  => 'Select the OpenAI model to use.',
-						'label'    => __( 'OpenAI Model', 'gravityforms-openai' ),
-						'type'     => 'radio',
-						'choices'  => $this->get_openai_model_choices( 'completions' ),
-						'required' => true,
-					),
-					array(
-						'name'     => 'completions_prompt',
-						'tooltip'  => 'Enter the prompt to send to OpenAI.',
-						'label'    => 'Prompt',
-						'type'     => 'textarea',
-						'class'    => 'medium merge-tag-support mt-position-right',
-						'required' => true,
-					),
-					$this->feed_setting_enable_merge_tag( 'completions' ),
-					$this->feed_setting_map_result_to_field( 'completions' ),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'completions' ),
-						),
 					),
 				),
 			),
@@ -609,46 +516,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 						array(
 							'field'  => 'endpoint',
 							'values' => array( 'chat/completions' ),
-						),
-					),
-				),
-			),
-			array(
-				'title'      => 'Edits',
-				'fields'     => array(
-					array(
-						'name'     => 'edits_model',
-						'tooltip'  => 'Select the OpenAI model to use.',
-						'label'    => __( 'OpenAI Model', 'gravityforms-openai' ),
-						'type'     => 'radio',
-						'choices'  => $this->get_openai_model_choices( 'edits' ),
-						'required' => true,
-					),
-					array(
-						'name'     => 'edits_input',
-						'tooltip'  => __( 'The input text to use as a starting point for the edit.', 'gravityforms-openai' ),
-						'label'    => 'Input',
-						'type'     => 'textarea',
-						'class'    => 'medium merge-tag-support mt-position-right',
-						'required' => false,
-					),
-					array(
-						'name'     => 'edits_instruction',
-						'tooltip'  => __( 'The instruction that tells the model how to edit the prompt.', 'gravityforms-openai' ),
-						'label'    => __( 'Instruction', 'gravityforms-openai' ),
-						'type'     => 'textarea',
-						'class'    => 'medium merge-tag-support mt-position-right',
-						'required' => true,
-					),
-					$this->feed_setting_enable_merge_tag( 'edits' ),
-					$this->feed_setting_map_result_to_field( 'edits' ),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'edits' ),
 						),
 					),
 				),
@@ -735,26 +602,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 			),
 			array(
-				'title'      => 'Advanced Settings: Completions',
-				'fields'     => array(
-					$this->feed_advanced_setting_timeout( 'completions' ),
-					$this->feed_advanced_setting_max_tokens( 'completions' ),
-					$this->feed_advanced_setting_temperature( 'completions' ),
-					$this->feed_advanced_setting_top_p( 'completions' ),
-					$this->feed_advanced_setting_frequency_penalty( 'completions' ),
-					$this->feed_advanced_setting_presence_penalty( 'completions' ),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'completions' ),
-						),
-					),
-				),
-			),
-			array(
 				'title'      => 'Advanced Settings: Chat Completions',
 				'fields'     => array(
 					$this->feed_advanced_setting_timeout( 'chat/completions' ),
@@ -770,23 +617,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 						array(
 							'field'  => 'endpoint',
 							'values' => array( 'chat/completions' ),
-						),
-					),
-				),
-			),
-			array(
-				'title'      => 'Advanced Settings: Edits',
-				'fields'     => array(
-					$this->feed_advanced_setting_timeout( 'edits' ),
-					$this->feed_advanced_setting_temperature( 'edits' ),
-					$this->feed_advanced_setting_top_p( 'edits' ),
-				),
-				'dependency' => array(
-					'live'   => true,
-					'fields' => array(
-						array(
-							'field'  => 'endpoint',
-							'values' => array( 'edits' ),
 						),
 					),
 				),
@@ -819,10 +649,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			'name'        => $endpoint . '_enable_merge_tag',
 			'type'        => 'checkbox',
 			'label'       => __( 'Merge Tag', 'gravityforms-openai' ),
-			'description' => __( 'Enable getting the output of the OpenAI result using a merge tag.
-								<br /><br />
-								Pro Tip: This works with Gravity Forms Populate Anything\'s
-								<a href="https://gravitywiz.com/documentation/gravity-forms-populate-anything/#live-merge-tags" target="_blank">Live Merge Tags</a>!', 'gravityforms-openai' ),
+			'description' => __( 'Enable getting the output of the OpenAI result using a merge tag.', 'gravityforms-openai' ),
 			'choices'     => array(
 				array(
 					'name'  => $endpoint . '_enable_merge_tag',
@@ -1039,19 +866,12 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @return array|void|null
 	 */
 	public function process_feed( $feed, $entry, $form ) {
+		$feed = $this->transform_feed( $feed );
 		$endpoint = $feed['meta']['endpoint'];
 
 		switch ( $endpoint ) {
-			case 'completions':
-				$entry = $this->process_endpoint_completions( $feed, $entry, $form );
-				break;
-
 			case 'chat/completions':
 				$entry = $this->process_endpoint_chat_completions( $feed, $entry, $form );
-				break;
-
-			case 'edits':
-				$entry = $this->process_endpoint_edits( $feed, $entry, $form );
 				break;
 
 			case 'moderations':
@@ -1063,60 +883,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				$this->add_feed_error( sprintf( __( 'Unknown endpoint: %s' ), $endpoint ), $feed, $entry, $form );
 				break;
 		}
-
-		return $entry;
-	}
-
-	/**
-	 * Process completions endpoint.
-	 *
-	 * @param $feed array The current feed being processed.
-	 * @param $entry array The current entry being processed.
-	 * @param $form array The current form being processed.
-	 *
-	 * @return array Modified entry.
-	 */
-	public function process_endpoint_completions( $feed, $entry, $form ) {
-		$model  = $feed['meta']['completions_model'];
-		$prompt = $feed['meta']['completions_prompt'];
-
-		// Parse the merge tags in the prompt.
-		$prompt = GFCommon::replace_variables( $prompt, $form, $entry, false, false, false, 'text' );
-
-		GFAPI::add_note( $entry['id'], 0, 'OpenAI Request (' . $feed['meta']['feed_name'] . ')', sprintf( __( 'Sent request to OpenAI completions endpoint.', 'gravityforms-openai' ) ) );
-
-		// translators: placeholders are the feed name, model, prompt
-		$this->log_debug( __METHOD__ . '(): ' . sprintf( __( 'Sent request to OpenAI. Feed: %1$s, Endpoint: completions, Model: %2$s, Prompt: %3$s', 'gravityforms-openai' ), $feed['meta']['feed_name'], $model, $prompt ) );
-
-		$response = $this->make_request( 'completions', array(
-			'prompt' => $prompt,
-			'model'  => $model,
-		), $feed );
-
-		if ( is_wp_error( $response ) ) {
-			// If there was an error, log it and return.
-			$this->add_feed_error( $response->get_error_message(), $feed, $entry, $form );
-			return $entry;
-		}
-
-		// Parse the response and add it as an entry note.
-		$response_data = json_decode( $response['body'], true );
-
-		if ( rgar( $response_data, 'error' ) ) {
-			$this->add_feed_error( $response_data['error']['message'], $feed, $entry, $form );
-			return $entry;
-		}
-
-		$text = $this->get_text_from_response( $response_data );
-
-		if ( ! is_wp_error( $text ) ) {
-			GFAPI::add_note( $entry['id'], 0, 'OpenAI Response (' . $feed['meta']['feed_name'] . ')', $text );
-			$entry = $this->maybe_save_result_to_field( $feed, $entry, $form, $text );
-		} else {
-			$this->add_feed_error( $text->get_error_message(), $feed, $entry, $form );
-		}
-
-		gform_add_meta( $entry['id'], 'openai_response_' . $feed['id'], $response['body'] );
 
 		return $entry;
 	}
@@ -1182,64 +948,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		return $entry;
 	}
-
-	/**
-	 * Process edits endpoint.
-	 *
-	 * @param $feed array The current feed being processed.
-	 * @param $entry array The current entry being processed.
-	 * @param $form array The current form being processed.
-	 *
-	 * @return array Modified entry.
-	 */
-	public function process_endpoint_edits( $feed, $entry, $form ) {
-		$model       = $feed['meta']['edits_model'];
-		$input       = $feed['meta']['edits_input'];
-		$instruction = $feed['meta']['edits_instruction'];
-
-		// Parse the merge tags in the input and instruction
-		$input       = GFCommon::replace_variables( $input, $form, $entry, false, false, false, 'text' );
-		$instruction = GFCommon::replace_variables( $instruction, $form, $entry, false, false, false, 'text' );
-
-		GFAPI::add_note( $entry['id'], 0, 'OpenAI Request (' . $feed['meta']['feed_name'] . ')', sprintf( __( 'Sent request to OpenAI edits endpoint.', 'gravityforms-openai' ) ) );
-
-		// translators: placeholders are the feed name, model, prompt
-		$this->log_debug( __METHOD__ . '(): ' . sprintf( __( 'Sent request to OpenAI. Feed: %1$s, Endpoint: edits, Model: %2$s, Input: %3$s, instruction: %4$s', 'gravityforms-openai' ), $feed['meta']['feed_name'], $model, $input, $instruction ) );
-
-		$response = $this->make_request( 'edits', array(
-			'input'       => $input,
-			'instruction' => $instruction,
-			'model'       => $model,
-		), $feed );
-
-		if ( is_wp_error( $response ) ) {
-			// If there was an error, log it and return.
-			$this->add_feed_error( $response->get_error_message(), $feed, $entry, $form );
-			return $entry;
-		}
-
-		// Parse the response and add it as an entry note.
-		$response_data = json_decode( $response['body'], true );
-
-		if ( rgar( $response_data, 'error' ) ) {
-			$this->add_feed_error( $response_data['error']['message'], $feed, $entry, $form );
-			return $entry;
-		}
-
-		$text = $this->get_text_from_response( $response_data );
-
-		if ( ! is_wp_error( $text ) ) {
-			GFAPI::add_note( $entry['id'], 0, 'OpenAI Response (' . $feed['meta']['feed_name'] . ')', $text );
-			$entry = $this->maybe_save_result_to_field( $feed, $entry, $form, $text );
-		} else {
-			$this->add_feed_error( $text->get_error_message(), $feed, $entry, $form );
-		}
-
-		gform_add_meta( $entry['id'], 'openai_response_' . $feed['id'], $response['body'] );
-
-		return $entry;
-	}
-
 
 	/**
 	 * Saves the result to the selected field if configured.
@@ -1553,27 +1261,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$response_data = array();
 
 		switch ( $endpoint ) {
-			case 'completions':
-				$model  = $feed['meta']['completions_model'];
-				$prompt = $feed['meta']['completions_prompt'];
-
-				$prompt = GFCommon::replace_variables( $prompt, $form, $entry, false, false, false, 'text' );
-
-				// If prompt is empty, do not generate any completion response, skip with blank.
-				if ( empty( $prompt ) ) {
-					return '';
-				}
-
-				$response = $this->make_request( 'completions', array(
-					'model'  => $model,
-					'prompt' => $prompt,
-				), $feed );
-
-				if ( ! is_wp_error( $response ) ) {
-					$response_data = json_decode( $response['body'], true );
-				}
-				break;
-
 			case 'chat/completions':
 				$model   = $feed['meta']['chat_completions_model'];
 				$message = $feed['meta']['chat_completions_message'];
@@ -1596,30 +1283,6 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 						),
 					),
 					'model'    => $model,
-				), $feed );
-
-				if ( ! is_wp_error( $response ) ) {
-					$response_data = json_decode( $response['body'], true );
-				}
-				break;
-
-			case 'edits':
-				$model       = $feed['meta']['edits_model'];
-				$input       = $feed['meta']['edits_input'];
-				$instruction = $feed['meta']['edits_instruction'];
-
-				$input       = GFCommon::replace_variables( $input, $form, $entry, false, false, false, 'text' );
-				$instruction = GFCommon::replace_variables( $instruction, $form, $entry, false, false, false, 'text' );
-
-				// If input or instruction is empty, do not generate any edit response, skip with blank.
-				if ( empty( $input ) || empty( $instruction ) ) {
-					return '';
-				}
-
-				$response = $this->make_request( 'edits', array(
-					'model'       => $model,
-					'input'       => $input,
-					'instruction' => $instruction,
 				), $feed );
 
 				if ( ! is_wp_error( $response ) ) {
@@ -1705,25 +1368,12 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		}
 
 		switch ( $endpoint ) {
-			case 'completions':
-				$body['max_tokens']        = (float) rgar( $feed['meta'], $endpoint . '_' . 'max_tokens', $this->default_settings['completions']['max_tokens'] );
-				$body['temperature']       = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['completions']['temperature'] );
-				$body['top_p']             = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['completions']['top_p'] );
-				$body['frequency_penalty'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'frequency_penalty', $this->default_settings['completions']['frequency_penalty'] );
-				$body['presence_penalty']  = (float) rgar( $feed['meta'], $endpoint . '_' . 'presence_penalty', $this->default_settings['completions']['presence_penalty'] );
-				break;
-
 			case 'chat/completions':
 				$body['max_tokens']        = (float) rgar( $feed['meta'], $endpoint . '_' . 'max_tokens', $this->default_settings['chat/completions']['max_tokens'] );
 				$body['temperature']       = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['chat/completions']['temperature'] );
 				$body['top_p']             = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['chat/completions']['top_p'] );
 				$body['frequency_penalty'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'frequency_penalty', $this->default_settings['chat/completions']['frequency_penalty'] );
 				$body['presence_penalty']  = (float) rgar( $feed['meta'], $endpoint . '_' . 'presence_penalty', $this->default_settings['chat/completions']['presence_penalty'] );
-				break;
-
-			case 'edits':
-				$body['temperature'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['edits']['temperature'] );
-				$body['top_p']       = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['edits']['top_p'] );
 				break;
 		}
 
@@ -1790,6 +1440,51 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		}
 
 		return $headers;
+	}
+
+	public function get_feed( $id ) {
+		$feed = parent::get_feed( $id );
+
+		if ( $this->is_feed_edit_page() ) {
+			$message = $this->get_transform_message( $feed );
+			GFCommon::add_dismissible_message( $message, $id . '_transform_feed_notice' );
+		}
+
+		return $this->transform_feed( $feed );
+	}
+
+	/**
+	 * Transforms completion or edits  feed to  Chat\Completion
+	 *
+	 * @param array $feed The feed being processed.
+	 *
+	 * @return array
+	 */
+    public function transform_feed( $feed ) {
+		$endpoint = rgars( $feed, 'meta/endpoint' );
+
+		if ( $endpoint === 'completions' ) {
+			$completion_message = rgars( $feed, 'meta/completions_prompt' );
+			$feed['meta'] = array_merge( $feed['meta'], array( 'endpoint' => 'chat/completions', 'chat_completions_model' => 'gpt-3.5-turbo', 'chat_completions_message' => $completion_message ) );
+		}
+
+		if ( $endpoint === 'edits' ) {
+			$completion_message = rgars( $feed, 'meta/edits_instruction' ) . "\r\n\r\n" . rgars( $feed, 'meta/edits_input' );
+			$feed['meta'] = array_merge( $feed['meta'], array( 'endpoint' => 'chat/completions', 'chat_completions_model' => 'gpt-3.5-turbo', 'chat_completions_message' => $completion_message ) );
+		}
+
+		return $feed;
+    }
+
+	/**
+	 * @param array $feed The feed being processed.
+	 *
+	 * @return string
+	 */
+	public function get_transform_message( $feed ) {
+		$endpoint = rgars( $feed, 'meta/endpoint' );
+
+		return sprintf( __( 'This feed has been updated to use the "Chat Completions" endpoint, replacing the "%s" endpoint which has been deprecated by OpenAI.', 'gravityforms-openai' ), ucfirst( $endpoint ) );
 	}
 
 	/**
