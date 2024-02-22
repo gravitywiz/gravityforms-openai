@@ -603,6 +603,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			),
 			array(
 				'title'      => 'Advanced Settings: Chat Completions',
+				'id'         => 'advanced_settings_chat_completions',
 				'fields'     => array(
 					$this->feed_advanced_setting_timeout( 'chat/completions' ),
 					$this->feed_advanced_setting_max_tokens( 'chat/completions' ),
@@ -611,6 +612,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					$this->feed_advanced_setting_frequency_penalty( 'chat/completions' ),
 					$this->feed_advanced_setting_presence_penalty( 'chat/completions' ),
 				),
+				'collapsible' => true,
+				'is_collapsed' => ! isset( $_POST[ 'gform_settings_section_collapsed_advanced_settings_chat_completions' ] ),
 				'dependency' => array(
 					'live'   => true,
 					'fields' => array(
@@ -1475,7 +1478,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				array(
 					'endpoint'                 => 'chat/completions',
 					'chat_completions_model'   => 'gpt-3.5-turbo',
-					'chat_completions_message' => $completion_message 
+					'chat_completions_message' => $completion_message
 				)
 			);
 		}
