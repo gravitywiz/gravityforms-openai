@@ -261,23 +261,14 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	public function get_openai_models() {
 		$models = array(
 			'chat/completions' => array(
-				'gpt-3.5-turbo'      => array(
-					'description' => __( 'The same model used by <a href="https://chat.openai.com" target="_blank">ChatGPT</a>.', 'gravityforms-openai' ),
-				),
-				'gpt-3.5-turbo-16k'  => array(
-					'description' => __( 'Same capabilities as the standard gpt-3.5-turbo model but with 4x the context length.', 'gravityforms-openai' ),
-				),
-				'gpt-4'              => array(
-					'description' => __( 'More capable than any GPT-3.5 model, able to do more complex tasks, and optimized for chat. Will be updated with the latest model iteration.', 'gravityforms-openai' ),
-				),
-				'gpt-4-32k'          => array(
-					'description' => __( 'Same capabilities as the base gpt-4 mode but with 4x the context length. Will be updated with the latest model iteration.', 'gravityforms-openai' ),
-				),
-				'gpt-4-1106-preview' => array(
-					'description' => __( 'The latest GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Returns a maximum of 4,096 output tokens.', 'gravityforms-openai' ),
-				),
 				'gpt-4o'             => array(
-					'description' => __( 'The newest flagship model that provides GPT-4-level intelligence but is much faster and improves on its capabilities across text, voice, and vision.', 'gravityforms-openai' ),
+					'description' => __( 'OpenAI\'s fastest and most affordable flagship model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4o" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
+				'gpt-4-turbo' => array(
+					'description' => __( 'OpenAI\'s previous high-intelligence model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
+				'gpt-3.5-turbo'       => array(
+					'description' => __( 'Inexpensive model for simple tasks. Context length: 16k. <a href="https://platform.openai.com/docs/models/gpt-3-5-turbo" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
 			),
 			'moderations'      => array(
