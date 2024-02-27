@@ -140,6 +140,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		add_filter( 'gform_export_form', array( $this, 'export_feeds_with_form' ) );
 		add_action( 'gform_forms_post_import', array( $this, 'import_feeds_with_form' ) );
+		add_action( 'admin_head', array( $this, 'disable_notice_css' ) );
 	}
 
 	/**
@@ -612,9 +613,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					$this->feed_advanced_setting_frequency_penalty( 'chat/completions' ),
 					$this->feed_advanced_setting_presence_penalty( 'chat/completions' ),
 				),
-				'collapsible' => true,
-				'is_collapsed' => ! isset( $_POST[ 'gform_settings_section_collapsed_advanced_settings_chat_completions' ] ),
-				'dependency' => array(
+				'collapsible'  => true,
+				'is_collapsed' => ! isset( $_POST['gform_settings_section_collapsed_advanced_settings_chat_completions'] ),
+				'dependency'   => array(
 					'live'   => true,
 					'fields' => array(
 						array(
@@ -869,7 +870,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 * @return array|void|null
 	 */
 	public function process_feed( $feed, $entry, $form ) {
-		$feed = $this->transform_feed( $feed );
+		$feed     = $this->transform_feed( $feed );
 		$endpoint = $feed['meta']['endpoint'];
 
 		switch ( $endpoint ) {
@@ -1449,7 +1450,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$feed     = parent::get_feed( $id );
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
-		if ( !in_array( $endpoint, array( 'completions', 'edits' ) ) ) {
+		if ( ! in_array( $endpoint, array( 'completions', 'edits' ) ) ) {
 			return $feed;
 		}
 
@@ -1459,6 +1460,14 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		}
 
 		return $this->transform_feed( $feed );
+	}
+
+	public function get_feeds( $form_id = null ) {
+		$feeds = parent::get_feeds( $form_id );
+
+		return array_map( function( $feed ) {
+			return $this->transform_feed( $feed );
+		}, $feeds );
 	}
 
 	/**
@@ -1472,13 +1481,22 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
 		if ( $endpoint === 'completions' ) {
-			$completion_message = rgars( $feed, 'meta/completions_prompt' );
 			$feed['meta']       = array_merge(
 				$feed['meta'],
 				array(
-					'endpoint'                 => 'chat/completions',
-					'chat_completions_model'   => 'gpt-3.5-turbo',
-					'chat_completions_message' => $completion_message
+					'endpoint'                                => 'chat/completions',
+					'chat_completions_model'                  => 'gpt-3.5-turbo',
+					'chat_completions_message'                => rgars( $feed, 'meta/completions_prompt' ),
+					'chat/completions_enable_merge_tag'       => rgars( $feed, 'meta/completions_enable_merge_tag' ),
+					'chat/completions_map_result_to_field'    => rgars( $feed, 'meta/completions_map_result_to_field' ),
+					'chat/completions_timeout'                => rgars( $feed, 'meta/completions_timeout' ),
+					'chat/completions_max_tokens'             => rgars( $feed, 'meta/completions_max_tokens' ),
+					'chat/completions_temperature'            => rgars( $feed, 'meta/completions_temperature' ),
+					'chat/completions_top_p'                  => rgars( $feed, 'meta/completions_top_p' ),
+					'chat/completions_frequency_penalty'      => rgars( $feed, 'meta/completions_frequency_penalty' ),
+					'chat/completions_presence_penalty'       => rgars( $feed, 'meta/completions_presence_penalty' ),
+					'feed_condition_conditional_logic_object' => rgars( $feed, 'feed_condition_conditional_logic_object' ),
+					'feed_condition_conditional_logic'        => rgars( $feed, 'feed_condition_conditional_logic' ),
 				)
 			);
 		}
@@ -1488,15 +1506,22 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$feed['meta']       = array_merge(
 				$feed['meta'],
 				array(
-					'endpoint'                 => 'chat/completions',
-					'chat_completions_model'   => 'gpt-3.5-turbo',
-					'chat_completions_message' => $completion_message
+					'endpoint'                                => 'chat/completions',
+					'chat_completions_model'                  => 'gpt-3.5-turbo',
+					'chat_completions_message'                => $completion_message,
+					'chat/completions_enable_merge_tag'       => rgars( $feed, 'meta/edits_enable_merge_tag' ),
+					'chat/completions_map_result_to_field'    => rgars( $feed, 'meta/edits_map_result_to_field' ),
+					'chat/completions_timeout'                => rgars( $feed, 'meta/edits_timeout' ),
+					'chat/completions_temperature'            => rgars( $feed, 'meta/edits_temperature' ),
+					'chat/completions_top_p'                  => rgars( $feed, 'meta/edits_top_p' ),
+					'feed_condition_conditional_logic_object' => rgars( $feed, 'feed_condition_conditional_logic_object' ),
+					'feed_condition_conditional_logic'        => rgars( $feed, 'feed_condition_conditional_logic' ),
 				)
 			);
 		}
 
 		return $feed;
-    }
+	}
 
 	/**
 	 * @param string $end feed endpoint.
@@ -1505,7 +1530,15 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	 */
 	public function get_transform_message( $endpoint ) {
 		// translators: placeholder is a string
-		return sprintf( __( 'This feed has been updated to use the "Chat Completions" endpoint, replacing the "%s" endpoint which has been deprecated by OpenAI.', 'gravityforms-openai' ), ucfirst( $endpoint ) );
+		return sprintf( __( 'This feed has been updated to use the "Chat Completions" endpoint, replacing the "%s" endpoint which has been deprecated by OpenAI. Save this feed to dismiss this message.', 'gravityforms-openai' ), ucfirst( $endpoint ) );
+	}
+
+	public function disable_notice_css() {
+		if ( $this->is_feed_edit_page() ) {
+			?>
+			<style>.notice-dismiss { display: none; }</style>
+			<?php
+		}
 	}
 
 	/**
