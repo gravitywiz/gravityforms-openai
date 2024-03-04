@@ -603,9 +603,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 			),
 			array(
-				'title'      => 'Advanced Settings: Chat Completions',
-				'id'         => 'advanced_settings_chat_completions',
-				'fields'     => array(
+				'title'        => 'Advanced Settings: Chat Completions',
+				'id'           => 'advanced_settings_chat_completions',
+				'fields'       => array(
 					$this->feed_advanced_setting_timeout( 'chat/completions' ),
 					$this->feed_advanced_setting_max_tokens( 'chat/completions' ),
 					$this->feed_advanced_setting_temperature( 'chat/completions' ),
@@ -633,7 +633,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 				'collapsible'  => true,
 				'is_collapsed' => ! isset( $_POST['gform_settings_section_collapsed_advanced_settings_moderations'] ),
-				'dependency' => array(
+				'dependency'   => array(
 					'live'   => true,
 					'fields' => array(
 						array(
@@ -1459,13 +1459,13 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		return $feed;
 	}
 
-    public function feed_edit_page( $form, $feed_id ) {
+	public function feed_edit_page( $form, $feed_id ) {
 		$feed = parent::get_feed( $feed_id );
 
 		if ( $this->should_transform_feed( $feed ) ) {
 			$endpoint = rgars( $feed, 'meta/endpoint' );
 			$notice   = $this->get_transform_message( $endpoint );
-			$this->get_settings_renderer()->set_postback_message_callback( function( $message ) use( $notice ) {
+			$this->get_settings_renderer()->set_postback_message_callback( function( $message ) use ( $notice ) {
 				return $notice;
 			} );
 		}
@@ -1492,7 +1492,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		$endpoint = rgars( $feed, 'meta/endpoint' );
 
 		if ( $endpoint === 'completions' ) {
-			$feed['meta']       = array_merge(
+			$feed['meta'] = array_merge(
 				$feed['meta'],
 				array(
 					'endpoint'                                => 'chat/completions',
@@ -1556,7 +1556,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 	public function add_warning_css() {
 		$messages = json_encode(
-			array( 
+			array(
 				$this->get_transform_message( 'completions' ),
 				$this->get_transform_message( 'edits' ),
 			)
