@@ -140,7 +140,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		add_filter( 'gform_export_form', array( $this, 'export_feeds_with_form' ) );
 		add_action( 'gform_forms_post_import', array( $this, 'import_feeds_with_form' ) );
-		add_action( 'admin_head', array( $this, 'disable_notice_css' ) );
+		add_action( 'admin_footer', array( $this, 'add_warning_css' ) );
 	}
 
 	/**
@@ -627,9 +627,12 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			),
 			array(
 				'title'      => 'Advanced Settings: Moderations',
+				'id'         => 'advanced_settings_moderations',
 				'fields'     => array(
 					$this->feed_advanced_setting_timeout( 'moderations' ),
 				),
+				'collapsible'  => true,
+				'is_collapsed' => ! isset( $_POST['gform_settings_section_collapsed_advanced_settings_moderations'] ),
 				'dependency' => array(
 					'live'   => true,
 					'fields' => array(
@@ -1447,19 +1450,27 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	}
 
 	public function get_feed( $id ) {
-		$feed     = parent::get_feed( $id );
-		$endpoint = rgars( $feed, 'meta/endpoint' );
+		$feed = parent::get_feed( $id );
 
-		if ( ! in_array( $endpoint, array( 'completions', 'edits' ) ) ) {
-			return $feed;
+		if ( $this->should_transform_feed( $feed ) ) {
+			return $this->transform_feed( $feed );
 		}
 
-		if ( $this->is_feed_edit_page() ) {
-			$message = $this->get_transform_message( $endpoint );
-			GFCommon::add_dismissible_message( $message, $id . '_transform_feed_notice' );
+		return $feed;
+	}
+
+    public function feed_edit_page( $form, $feed_id ) {
+		$feed = parent::get_feed( $feed_id );
+
+		if ( $this->should_transform_feed( $feed ) ) {
+			$endpoint = rgars( $feed, 'meta/endpoint' );
+			$notice   = $this->get_transform_message( $endpoint );
+			$this->get_settings_renderer()->set_postback_message_callback( function( $message ) use( $notice ) {
+				return $notice;
+			} );
 		}
 
-		return $this->transform_feed( $feed );
+		parent::feed_edit_page( $form, $feed_id );
 	}
 
 	public function get_feeds( $form_id = null ) {
@@ -1533,10 +1544,34 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		return sprintf( __( 'This feed has been updated to use the "Chat Completions" endpoint, replacing the "%s" endpoint which has been deprecated by OpenAI. Save this feed to dismiss this message.', 'gravityforms-openai' ), ucfirst( $endpoint ) );
 	}
 
-	public function disable_notice_css() {
+	public function should_transform_feed( $feed ) {
+		$endpoint = rgars( $feed, 'meta/endpoint' );
+
+		if ( in_array( $endpoint, array( 'completions', 'edits' ) ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function add_warning_css() {
+		$messages = json_encode(
+			array( 
+				$this->get_transform_message( 'completions' ),
+				$this->get_transform_message( 'edits' ),
+			)
+		);
+
 		if ( $this->is_feed_edit_page() ) {
 			?>
-			<style>.notice-dismiss { display: none; }</style>
+			<script>
+				const notice = document.getElementsByClassName("gforms_note_success")[0];
+				const messages = <?php echo $messages; ?>;
+				if (messages.includes(notice.innerText)){
+					notice.classList.remove("gforms_note_success");
+					notice.classList.add("gforms_note_warning");
+				}
+			</script>
 			<?php
 		}
 	}
