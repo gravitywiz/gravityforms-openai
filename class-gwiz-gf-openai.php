@@ -626,9 +626,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				),
 			),
 			array(
-				'title'      => 'Advanced Settings: Moderations',
-				'id'         => 'advanced_settings_moderations',
-				'fields'     => array(
+				'title'        => 'Advanced Settings: Moderations',
+				'id'           => 'advanced_settings_moderations',
+				'fields'       => array(
 					$this->feed_advanced_setting_timeout( 'moderations' ),
 				),
 				'collapsible'  => true,
@@ -1495,19 +1495,19 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$feed['meta'] = array_merge(
 				$feed['meta'],
 				array(
-					'endpoint'                                => 'chat/completions',
-					'chat_completions_model'                  => 'gpt-3.5-turbo',
-					'chat_completions_message'                => rgars( $feed, 'meta/completions_prompt' ),
-					'chat/completions_enable_merge_tag'       => rgars( $feed, 'meta/completions_enable_merge_tag' ),
-					'chat/completions_map_result_to_field'    => rgars( $feed, 'meta/completions_map_result_to_field' ),
-					'chat/completions_timeout'                => rgars( $feed, 'meta/completions_timeout' ),
-					'chat/completions_max_tokens'             => rgars( $feed, 'meta/completions_max_tokens' ),
-					'chat/completions_temperature'            => rgars( $feed, 'meta/completions_temperature' ),
-					'chat/completions_top_p'                  => rgars( $feed, 'meta/completions_top_p' ),
-					'chat/completions_frequency_penalty'      => rgars( $feed, 'meta/completions_frequency_penalty' ),
-					'chat/completions_presence_penalty'       => rgars( $feed, 'meta/completions_presence_penalty' ),
-					'feed_condition_conditional_logic_object' => rgars( $feed, 'feed_condition_conditional_logic_object' ),
-					'feed_condition_conditional_logic'        => rgars( $feed, 'feed_condition_conditional_logic' ),
+					'endpoint'                             => 'chat/completions',
+					'chat_completions_model'               => 'gpt-3.5-turbo',
+					'chat_completions_message'             => rgars( $feed, 'meta/completions_prompt' ),
+					'chat/completions_enable_merge_tag'    => rgars( $feed, 'meta/completions_enable_merge_tag' ),
+					'chat/completions_map_result_to_field' => rgars( $feed, 'meta/completions_map_result_to_field' ),
+					'chat/completions_timeout'             => rgars( $feed, 'meta/completions_timeout' ),
+					'chat/completions_max_tokens'          => rgars( $feed, 'meta/completions_max_tokens' ),
+					'chat/completions_temperature'         => rgars( $feed, 'meta/completions_temperature' ),
+					'chat/completions_top_p'               => rgars( $feed, 'meta/completions_top_p' ),
+					'chat/completions_frequency_penalty'   => rgars( $feed, 'meta/completions_frequency_penalty' ),
+					'chat/completions_presence_penalty'    => rgars( $feed, 'meta/completions_presence_penalty' ),
+					'feed_condition_conditional_logic_object' => rgars( $feed, 'meta/feed_condition_conditional_logic_object' ),
+					'feed_condition_conditional_logic'     => rgars( $feed, 'meta/feed_condition_conditional_logic' ),
 				)
 			);
 		}
@@ -1525,8 +1525,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 					'chat/completions_timeout'                => rgars( $feed, 'meta/edits_timeout' ),
 					'chat/completions_temperature'            => rgars( $feed, 'meta/edits_temperature' ),
 					'chat/completions_top_p'                  => rgars( $feed, 'meta/edits_top_p' ),
-					'feed_condition_conditional_logic_object' => rgars( $feed, 'feed_condition_conditional_logic_object' ),
-					'feed_condition_conditional_logic'        => rgars( $feed, 'feed_condition_conditional_logic' ),
+					'feed_condition_conditional_logic_object' => rgars( $feed, 'meta/feed_condition_conditional_logic_object' ),
+					'feed_condition_conditional_logic'        => rgars( $feed, 'meta/feed_condition_conditional_logic' ),
 				)
 			);
 		}
