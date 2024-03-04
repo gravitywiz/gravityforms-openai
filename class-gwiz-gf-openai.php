@@ -1517,16 +1517,16 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			$feed['meta']       = array_merge(
 				$feed['meta'],
 				array(
-					'endpoint'                                => 'chat/completions',
-					'chat_completions_model'                  => 'gpt-3.5-turbo',
-					'chat_completions_message'                => $completion_message,
-					'chat/completions_enable_merge_tag'       => rgars( $feed, 'meta/edits_enable_merge_tag' ),
-					'chat/completions_map_result_to_field'    => rgars( $feed, 'meta/edits_map_result_to_field' ),
-					'chat/completions_timeout'                => rgars( $feed, 'meta/edits_timeout' ),
-					'chat/completions_temperature'            => rgars( $feed, 'meta/edits_temperature' ),
-					'chat/completions_top_p'                  => rgars( $feed, 'meta/edits_top_p' ),
+					'endpoint'                             => 'chat/completions',
+					'chat_completions_model'               => 'gpt-3.5-turbo',
+					'chat_completions_message'             => $completion_message,
+					'chat/completions_enable_merge_tag'    => rgars( $feed, 'meta/edits_enable_merge_tag' ),
+					'chat/completions_map_result_to_field' => rgars( $feed, 'meta/edits_map_result_to_field' ),
+					'chat/completions_timeout'             => rgars( $feed, 'meta/edits_timeout' ),
+					'chat/completions_temperature'         => rgars( $feed, 'meta/edits_temperature' ),
+					'chat/completions_top_p'               => rgars( $feed, 'meta/edits_top_p' ),
 					'feed_condition_conditional_logic_object' => rgars( $feed, 'meta/feed_condition_conditional_logic_object' ),
-					'feed_condition_conditional_logic'        => rgars( $feed, 'meta/feed_condition_conditional_logic' ),
+					'feed_condition_conditional_logic'     => rgars( $feed, 'meta/feed_condition_conditional_logic' ),
 				)
 			);
 		}
