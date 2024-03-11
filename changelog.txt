@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.9
+
+	- Removed the `completions` and `edit` endpoints which have been deprecated by OpenAI. Feeds using these endpoints will be automatically converted to the `chat/completions` endpoint.
+
 ## 1.0-beta-1.8
 
 	- Added `gpt-4-1106-preview` as an available model for the Chat Completions endpoint.
