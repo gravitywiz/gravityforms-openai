@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.10
+
+	- Fixed an issue where different cache keys could be generated with the same input resulting in different responses.
+
 ## 1.0-beta-1.9
 
 	- Removed the `completions` and `edit` endpoints which have been deprecated by OpenAI. Feeds using these endpoints will be automatically converted to the `chat/completions` endpoint.
