@@ -1358,7 +1358,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		$cache_key = sha1( serialize( array(
 			'url'            => $url,
-			'body'           => map_deep( $body, 'sanitize_text_field' ),
+			'body'           => map_deep( $body, 'sanitize_text_field' ), // Sanitize the `$body` variable to ensure consistent `$cache_key`
 			'request_params' => $this->get_request_params( $feed ),
 		) ) );
 
