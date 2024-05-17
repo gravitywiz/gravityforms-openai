@@ -276,6 +276,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				'gpt-4-1106-preview' => array(
 					'description' => __( 'The latest GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Returns a maximum of 4,096 output tokens.', 'gravityforms-openai' ),
 				),
+				'gpt-4o'             => array(
+					'description' => __( 'The newest flagship model that provides GPT-4-level intelligence but is much faster and improves on its capabilities across text, voice, and vision.', 'gravityforms-openai' ),
+				),
 			),
 			'moderations'      => array(
 				'text-moderation-stable' => array(
