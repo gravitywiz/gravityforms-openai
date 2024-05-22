@@ -1,102 +1,106 @@
 # Changelog
 
+## 1.0-beta-1.11 | May 22, 2024
+
+- Added `GPT-4o` chat completions model.
+
 ## 1.0-beta-1.10
 
-	- Fixed an issue where different cache keys could be generated with the same input resulting in different responses.
+- Fixed an issue where different cache keys could be generated with the same input resulting in different responses.
 
 ## 1.0-beta-1.9
 
-	- Removed the `completions` and `edit` endpoints which have been deprecated by OpenAI. Feeds using these endpoints will be automatically converted to the `chat/completions` endpoint.
+- Removed the `completions` and `edit` endpoints which have been deprecated by OpenAI. Feeds using these endpoints will be automatically converted to the `chat/completions` endpoint.
 
 ## 1.0-beta-1.8
 
-	- Added `gpt-4-1106-preview` as an available model for the Chat Completions endpoint.
-	- Added a filter to the OpenAI response.
+- Added `gpt-4-1106-preview` as an available model for the Chat Completions endpoint.
+- Added a filter to the OpenAI response.
 
 ## 1.0-beta-1.7
 
-	- Added a `log_debug()` call before any request.
-	- Fixed issue where the `gf_openai_chat_completions_message` filter hook would not run during merge tag replacement.
+- Added a `log_debug()` call before any request.
+- Fixed issue where the `gf_openai_chat_completions_message` filter hook would not run during merge tag replacement.
 
 ## 1.0-beta-1.6
 
-	- Added new `gf_openai_chat_completions_message` PHP filter hook.
-	- Fixed potential PHP notices.
+- Added new `gf_openai_chat_completions_message` PHP filter hook.
+- Fixed potential PHP notices.
 
 ## 1.0-beta-1.5
 
-	- Added OpenAI feeds to form export/import. (Closes #17)
-	- Added support for re-ordering feeds. (Closes #10)
+- Added OpenAI feeds to form export/import. (Closes #17)
+- Added support for re-ordering feeds. (Closes #10)
 
 ## 1.0-beta-1.4
 
-	- Added gpt-3.5-turbo-16k as an available model for the Chat Completions endpoint.
+- Added gpt-3.5-turbo-16k as an available model for the Chat Completions endpoint.
 
 ## 1.0-beta-1.3
 
-	- Added `gpt-4` and `gpt-4-32k` as available models for the Chat Completions endpoint.
+- Added `gpt-4` and `gpt-4-32k` as available models for the Chat Completions endpoint.
 
 ## 1.0-beta-1.2
 
-	- Fixed issue where merge tag completion values would sometimes be blank.
-	- Fixed issue where non-OpenAI merge tag output for multi-input field types such as checkboxes could get inadvertently cleared out.
-	- Fixed issues with Open AI feed not duplicating when form was duplicated.
-	- Added hook `gf_openai_post_save_result_to_field` to trigger after OpenAI result is stored on an entry.
-	- Added new `gf_openai_cache_responses` filter hook that can be used to disable caching OpenAI responses.
+- Fixed issue where merge tag completion values would sometimes be blank.
+- Fixed issue where non-OpenAI merge tag output for multi-input field types such as checkboxes could get inadvertently cleared out.
+- Fixed issues with Open AI feed not duplicating when form was duplicated.
+- Added hook `gf_openai_post_save_result_to_field` to trigger after OpenAI result is stored on an entry.
+- Added new `gf_openai_cache_responses` filter hook that can be used to disable caching OpenAI responses.
 
 ## 1.0-beta-1.1
 
-	- Fixed potential PHP warnings/errors caused by `php-scoper`.
+- Fixed potential PHP warnings/errors caused by `php-scoper`.
 
 ## 1.0-beta-1
 
-	- Added a Gravity Flow Step Type for OpenAI. Credit: @Idealien
-	- Added new `nl2br` modifier that can be used on merge tags to convert newlines into `<br />`'s. This is useful when outputting plain-text responses into HTML using Live Merge Tags. Example: `@{:1:openai_feed_5,nl2br}`.
-	- Fixed issue where feed conditional logic and feed status (active/inactive) were not checked during validation for the Moderations endpoint.
-	- Fixed issue where feed status was not taken into account during merge tag replacement so inactive feeds would still have their merge tags replaced.
-	- Added new Chat Completions endpoint.
-	- Added auto-updater powered by GitHub Releases.
-	- Added new capabilities to grant/deny access to OpenAI settings and to uninstall it.
+- Added a Gravity Flow Step Type for OpenAI. Credit: @Idealien
+- Added new `nl2br` modifier that can be used on merge tags to convert newlines into `<br />`'s. This is useful when outputting plain-text responses into HTML using Live Merge Tags. Example: `@{:1:openai_feed_5,nl2br}`.
+- Fixed issue where feed conditional logic and feed status (active/inactive) were not checked during validation for the Moderations endpoint.
+- Fixed issue where feed status was not taken into account during merge tag replacement so inactive feeds would still have their merge tags replaced.
+- Added new Chat Completions endpoint.
+- Added auto-updater powered by GitHub Releases.
+- Added new capabilities to grant/deny access to OpenAI settings and to uninstall it.
 
 ## 1.0-alpha-1.8
 
-	- Fixed an issue where GP Populate Anything values would not get populated when Gravity Forms OpenAI was enabled.
-	- Fixed an issue where OpenAI responses could be displayed in the Form Editor.
+- Fixed an issue where GP Populate Anything values would not get populated when Gravity Forms OpenAI was enabled.
+- Fixed an issue where OpenAI responses could be displayed in the Form Editor.
 
 ## 1.0-alpha-1.7
 
-	- Removed `Perk: True` from the plugin header to address potential PHP errors.
+- Removed `Perk: True` from the plugin header to address potential PHP errors.
 
 ## 1.0-alpha-1.6
 
-	- Added new `raw` modifier that can be used in the feed merge tags. This allows for fetching specific properties from the OpenAI response. Example usage: `{:1:openai_feed_2,raw[usage/total_tokens]}`
+- Added new `raw` modifier that can be used in the feed merge tags. This allows for fetching specific properties from the OpenAI response. Example usage: `{:1:openai_feed_2,raw[usage/total_tokens]}`
 
 ## 1.0-alpha-1.5
 
-	- Updated feed merge tags to evaluate feed conditional logic (if configured) before returning a result. If the conditional logic does not evaluate as truthy, an empty string is returned.
-	- Updated secret key setting to be a masked input.
+- Updated feed merge tags to evaluate feed conditional logic (if configured) before returning a result. If the conditional logic does not evaluate as truthy, an empty string is returned.
+- Updated secret key setting to be a masked input.
 
 ## 1.0-alpha-1.4
 
-	- Added new `gf_openai_request_body` PHP filter for customizing requests that go to OpenAI.
-	- Added support for using custom/fine-tuned models when using the Completions endpoint.
+- Added new `gf_openai_request_body` PHP filter for customizing requests that go to OpenAI.
+- Added support for using custom/fine-tuned models when using the Completions endpoint.
 
 ## 1.0-alpha-1.3
 
-	- Added kses/strip_all_tags (depending on if field is using rich text editor) to `maybe_save_result_to_field()`.
-	- Fixed regression where field map values weren't correctly saving (they would work in notifications/confirmation, however).
-	- Added conditional logic for feeds.
+- Added kses/strip_all_tags (depending on if field is using rich text editor) to `maybe_save_result_to_field()`.
+- Fixed regression where field map values weren't correctly saving (they would work in notifications/confirmation, however).
+- Added conditional logic for feeds.
 
 ## 1.0-alpha-1.2
 
-	- Fixed issue where results in mapped fields would not show in notifications.
+- Fixed issue where results in mapped fields would not show in notifications.
 
 ## 1.0-alpha-1.1
 
-	- Added README.md and copyright.
-	- Added changelog.
-	- Added GPLv2 license and removed unneeded files.
+- Added README.md and copyright.
+- Added changelog.
+- Added GPLv2 license and removed unneeded files.
 
 ## 1.0-alpha-1
 
-	- Hello World!
+- Hello World!
