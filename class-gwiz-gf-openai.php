@@ -267,6 +267,9 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 				'gpt-4-turbo' => array(
 					'description' => __( 'OpenAI\'s previous high-intelligence model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
+				'gpt-4o-mini' => array(
+					'description' => __( 'OpenAI\'s most cost-efficient small model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4o-mini" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
 				'gpt-3.5-turbo'       => array(
 					'description' => __( 'Inexpensive model for simple tasks. Context length: 16k. <a href="https://platform.openai.com/docs/models/gpt-3-5-turbo" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
