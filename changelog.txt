@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.13 | August 27, 2024
+
+- Added support for `gpt-4o-mini` chat completions model.
+
 ## 1.0-beta-1.12 | June 26, 2024
 
 - Updated the OpenAI model selection for Chat Completions to be `gpt-4o`, `gpt-4-turbo`, and `gpt-3.5-turbo`.
