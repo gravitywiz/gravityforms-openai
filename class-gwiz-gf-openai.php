@@ -48,7 +48,7 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	protected $_full_path   = __FILE__;
 	protected $_slug        = 'gravityforms-openai';
 	protected $_title       = 'Gravity Forms OpenAI';
-	protected $_short_title = 'OpenAI';
+	protected $_short_title = 'OpenAI (Free)';
 
 	/**
 	 * Defines the capabilities needed for the Add-On.
