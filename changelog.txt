@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.14 | September 9, 2024
+
+- Updated plugin name and menu title to disambiguate from GC OpenAI.
+
 ## 1.0-beta-1.13 | August 27, 2024
 
 - Added support for `gpt-4o-mini` chat completions model.
