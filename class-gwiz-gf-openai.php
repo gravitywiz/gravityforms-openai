@@ -261,16 +261,25 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	public function get_openai_models() {
 		$models = array(
 			'chat/completions' => array(
+				'gpt-5'         => array(
+					'description' => __( 'OpenAI\'s flagship model for coding, reasoning, and agentic tasks across domains. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-5" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
+				'gpt-5-mini'    => array(
+					'description' => __( 'OpenAI\'s faster, more cost-efficient version of GPT-5. It\'s great for well-defined tasks and precise prompts. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-5-mini" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
+				'gpt-5-nano'    => array(
+					'description' => __( 'OpenAI\'s fastest, cheapest version of GPT-5. It\'s great for summarization and classification tasks. It\'s great for well-defined tasks and precise prompts. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-5-mini" target="_blank">More Details</a>', 'gravityforms-openai' ),
+				),
 				'gpt-4o'             => array(
 					'description' => __( 'OpenAI\'s fastest and most affordable flagship model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4o" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
-				'gpt-4-turbo' => array(
+				'gpt-4-turbo'   => array(
 					'description' => __( 'OpenAI\'s previous high-intelligence model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
-				'gpt-4o-mini' => array(
+				'gpt-4o-mini'   => array(
 					'description' => __( 'OpenAI\'s most cost-efficient small model. Context length: 128k. <a href="https://platform.openai.com/docs/models/gpt-4o-mini" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
-				'gpt-3.5-turbo'       => array(
+				'gpt-3.5-turbo' => array(
 					'description' => __( 'Inexpensive model for simple tasks. Context length: 16k. <a href="https://platform.openai.com/docs/models/gpt-3-5-turbo" target="_blank">More Details</a>', 'gravityforms-openai' ),
 				),
 			),
@@ -1174,7 +1183,13 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 			return trim( rgars( $response, 'choices/0/message/content' ) );
 		}
 
-		return trim( rgar( $response, 'text' ) );
+		$text = rgar( $response, 'text', '' );
+		if ( ! empty( $response ) ) {
+			// safetly check as trim() doesn't accept null values
+			$text = trim( $text );
+		}
+
+		return $text;
 	}
 
 	/**
@@ -1373,11 +1388,11 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		switch ( $endpoint ) {
 			case 'chat/completions':
-				$body['max_tokens']        = (float) rgar( $feed['meta'], $endpoint . '_' . 'max_tokens', $this->default_settings['chat/completions']['max_tokens'] );
-				$body['temperature']       = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['chat/completions']['temperature'] );
-				$body['top_p']             = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['chat/completions']['top_p'] );
-				$body['frequency_penalty'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'frequency_penalty', $this->default_settings['chat/completions']['frequency_penalty'] );
-				$body['presence_penalty']  = (float) rgar( $feed['meta'], $endpoint . '_' . 'presence_penalty', $this->default_settings['chat/completions']['presence_penalty'] );
+				$body['max_completion_tokens'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'max_tokens', $this->default_settings['chat/completions']['max_tokens'] );
+				$body['temperature']           = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['chat/completions']['temperature'] );
+				$body['top_p']                 = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['chat/completions']['top_p'] );
+				$body['frequency_penalty']     = (float) rgar( $feed['meta'], $endpoint . '_' . 'frequency_penalty', $this->default_settings['chat/completions']['frequency_penalty'] );
+				$body['presence_penalty']      = (float) rgar( $feed['meta'], $endpoint . '_' . 'presence_penalty', $this->default_settings['chat/completions']['presence_penalty'] );
 				break;
 		}
 
