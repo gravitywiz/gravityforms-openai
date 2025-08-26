@@ -1388,11 +1388,36 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 
 		switch ( $endpoint ) {
 			case 'chat/completions':
-				$body['max_completion_tokens'] = (float) rgar( $feed['meta'], $endpoint . '_' . 'max_tokens', $this->default_settings['chat/completions']['max_tokens'] );
-				$body['temperature']           = (float) rgar( $feed['meta'], $endpoint . '_' . 'temperature', $this->default_settings['chat/completions']['temperature'] );
-				$body['top_p']                 = (float) rgar( $feed['meta'], $endpoint . '_' . 'top_p', $this->default_settings['chat/completions']['top_p'] );
-				$body['frequency_penalty']     = (float) rgar( $feed['meta'], $endpoint . '_' . 'frequency_penalty', $this->default_settings['chat/completions']['frequency_penalty'] );
-				$body['presence_penalty']      = (float) rgar( $feed['meta'], $endpoint . '_' . 'presence_penalty', $this->default_settings['chat/completions']['presence_penalty'] );
+				$body['max_completion_tokens'] = (float) rgar(
+					$feed['meta'],
+					$endpoint . '_max_tokens',
+					$this->default_settings['chat/completions']['max_tokens']
+				);
+
+				// temperature is deprecated in certain models, so only set if the user has set an explicit value.
+				$temperature = rgar( $feed['meta'], $endpoint . '_temperature' );
+				if ( $temperature !== null && $temperature !== '' ) {
+					$body['temperature'] = (float) $temperature;
+				}
+
+				// top_p is deprecated in certain models, so only set if the user has set an explicit value.
+				$top_p = rgar( $feed['meta'], $endpoint . '_top_p' );
+				if ( $top_p !== null && $top_p !== '' ) {
+					$body['top_p'] = (float) $top_p;
+				}
+
+				// frequency_penalty is deprecated in certain models, so only set if the user has set an explicit value.
+				$frequency_penalty = rgar( $feed['meta'], $endpoint . '_frequency_penalty' );
+				if ( $frequency_penalty !== null && $frequency_penalty !== '' ) {
+					$body['frequency_penalty'] = (float) $frequency_penalty;
+				}
+
+				// presence_penalty is deprecated in certain models, so only set if the user has set an explicit value.
+				$presence_penalty = rgar( $feed['meta'], $endpoint . '_presence_penalty' );
+				if ( $presence_penalty !== null && $presence_penalty !== '' ) {
+					$body['presence_penalty'] = (float) $presence_penalty;
+				}
+
 				break;
 		}
 
