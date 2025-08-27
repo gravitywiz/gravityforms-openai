@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0-beta-1.15 | August 27, 2025
+
+- Added support for `gpt-5`, `gpt-5-mini`, and `gpt-5-nano` Chat Completions models.
+
 ## 1.0-beta-1.14 | September 9, 2024
 
 - Updated plugin name and menu title to disambiguate from GC OpenAI.
