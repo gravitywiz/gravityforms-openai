@@ -47,8 +47,8 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 	protected $_path        = 'gravityforms-openai/gravityforms-openai.php';
 	protected $_full_path   = __FILE__;
 	protected $_slug        = 'gravityforms-openai';
-	protected $_title       = 'Gravity Forms OpenAI';
-	protected $_short_title = 'OpenAI (Free)';
+	protected $_title       = 'Gravity Forms OpenAI (deprecated).';
+	protected $_short_title = 'OpenAI (Deprecated)';
 
 	/**
 	 * Defines the capabilities needed for the Add-On.
@@ -253,6 +253,55 @@ class GWiz_GF_OpenAI extends GFFeedAddOn {
 		add_filter( 'gform_validation_message', array( $this, 'modify_validation_message' ), 15, 2 );
 		add_filter( 'gform_entry_is_spam', array( $this, 'moderations_endpoint_spam' ), 10, 3 );
 		add_filter( 'gform_pre_replace_merge_tags', array( $this, 'replace_merge_tags' ), 10, 7 );
+
+		add_action( 'admin_notices', array( $this, 'maybe_display_deprecation_notice' ) );
+		add_action( 'wp_ajax_gwiz_gf_openai_dismiss_deprecation_notice', array( $this, 'dismiss_deprecation_notice' ) );
+	}
+
+	/**
+	 * Displays a one-time deprecation notice in wp-admin.
+	 */
+	public function maybe_display_deprecation_notice() {
+		if ( ! current_user_can( 'activate_plugins' ) || $this->is_deprecation_notice_dismissed() ) {
+			return;
+		}
+		?>
+		<div class="notice notice-warning is-dismissible gwiz-gf-openai-deprecation-notice">
+			<p>The <strong>Gravity Forms OpenAI</strong> plugin has been deprecated and is no longer actively maintained. The plugin will continue to function as-is, but it will <strong>not receive future updates, improvements, or bug fixes.</strong></p>
+			<p>For continued development, enhanced features, and ongoing support, we recommend upgrading to <a href="https://gravitywiz.com/documentation/gravity-connect-openai/">Gravity Connect OpenAI</a>, our premium solution built specifically for long-term reliability and expansion.</p>
+		</div>
+		<script>
+			jQuery( document ).on( 'click', '.gwiz-gf-openai-deprecation-notice .notice-dismiss', function() {
+				jQuery.post( ajaxurl, {
+					action: 'gwiz_gf_openai_dismiss_deprecation_notice',
+					nonce: '<?php echo esc_js( wp_create_nonce( 'gwiz_gf_openai_dismiss_deprecation_notice' ) ); ?>'
+				} );
+			} );
+		</script>
+		<?php
+	}
+
+	/**
+	 * Persist dismissal of the deprecation notice for the current user.
+	 */
+	public function dismiss_deprecation_notice() {
+		check_ajax_referer( 'gwiz_gf_openai_dismiss_deprecation_notice', 'nonce' );
+
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			wp_send_json_error();
+		}
+
+		update_user_meta( get_current_user_id(), 'gwiz_gf_openai_deprecation_notice_dismissed', 1 );
+		wp_send_json_success();
+	}
+
+	/**
+	 * Checks whether the deprecation notice has been dismissed by the current user.
+	 *
+	 * @return bool
+	 */
+	public function is_deprecation_notice_dismissed() {
+		return (bool) get_user_meta( get_current_user_id(), 'gwiz_gf_openai_deprecation_notice_dismissed', true );
 	}
 
 	/**
