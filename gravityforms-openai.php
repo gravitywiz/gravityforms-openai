@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Gravity Forms OpenAI (Free)
+ * Plugin Name: Gravity Forms OpenAI (Deprecated)
  * Description: Pair the magic of OpenAI's robust models with Gravity Forms' flexibility.
  * Plugin URI: https://gravitywiz.com/gravity-forms-openai/
  * Version: 1.0-beta-1.15
